@@ -67,3 +67,42 @@ vector<Location> get_all_locations_from_json(string path) {
 	return res;
 }
 
+/*
+Lấy danh sách id địa điểm yêu thích từ file theo username
+*/
+vector<string> get_favourite_location_id(string path, string username) {
+	json fav = from_json_file(path);
+	vector<string> res;
+	for (auto el = fav.begin(); el != fav.end(); el++)
+	{
+		json favObj(*el);
+		if (!favObj[username].is_null()) {
+			auto locationList = favObj[username];
+			for (auto e = locationList.begin(); e != locationList.end(); e++) {
+				json locationId(*e);
+				string s = to_string(locationId);
+				s.erase(remove(s.begin(), s.end(), '\"'), s.end());
+				res.push_back(s);
+			}
+			return res;
+		}
+	}
+	return res;
+}
+
+/*
+Lấy location từ id list
+*/
+vector<Location> get_location_from_id_list(vector<Location> locations, vector<string> idList) {
+	vector<Location> res;
+	for (auto id : idList) {
+		for (auto location : locations) {
+			if (location.id.compare(id) == 0) {
+				res.push_back(location);
+				break;
+			}
+		}
+	}
+	return res;
+}
+

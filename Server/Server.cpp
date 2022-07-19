@@ -12,7 +12,7 @@
 #include "Common.h"
 #include "Account.h"
 #include "Location.h"
-#include "Enum.h"
+#include "../Shared/Enum.h"
 
 #pragma comment (lib,"ws2_32.lib")
 

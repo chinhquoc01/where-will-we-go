@@ -16,3 +16,5 @@ public:
 
 json to_json_array_location(vector<Location> v);
 vector<Location> get_all_locations_from_json(string path);
+vector<string> get_favourite_location_id(string path, string username);
+vector<Location> get_location_from_id_list(vector<Location> locations, vector<string> idList);

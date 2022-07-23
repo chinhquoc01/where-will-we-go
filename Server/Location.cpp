@@ -13,6 +13,7 @@ Location::Location(string _id, string _name, int _type, string _address, string 
 	id = _id;
 	name = _name;
 	type = _type;
+	address = _address;
 	description = _description;
 }
 
@@ -23,6 +24,7 @@ Location::Location(string _name, int _type, string _address, string _description
 	id = random_string(6);
 	name = _name;
 	type = _type;
+	address = _address;
 	description = _description;
 }
 
@@ -34,6 +36,7 @@ json Location::to_json_obj() {
 	jsonObj["id"] = id;
 	jsonObj["name"] = name;
 	jsonObj["type"] = type;
+	jsonObj["address"] = address;
 	jsonObj["description"] = description;
 	return jsonObj;
 }
@@ -75,10 +78,10 @@ json to_json_array_favourite_location(vector<FavouriteLocation> v) {
 vector<Location> get_all_locations_from_json(string path) {
 	json j = from_json_file(path);
 	vector<Location> res;
-	for (auto it = j.begin(); it != j.end(); ++it)
+	for (auto it = j.begin(); it != j.end(); it++)
 	{
 		json jsonObj(*it);
-		Location l(jsonObj["id"], jsonObj["name"], jsonObj["type"], jsonObj["description"]);
+		Location l(jsonObj["id"], jsonObj["name"], jsonObj["type"], jsonObj["address"], jsonObj["description"]);
 		res.push_back(l);
 	}
 	return res;

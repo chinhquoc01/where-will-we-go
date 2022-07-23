@@ -250,35 +250,6 @@ int main(int ardc, char* argv[])
 
 	int ret, messageLen;
 	while (1) {
-		register_login(client);
-		if (strcpy(select_function, "3")) break;
-		else if (strcpy(select_function, "0")) {
-			system("cls");
-			continue;
-		}
-		else {
-			//nhan thong diep
-			ret = recv(client, buff, BUFF_SIZE, 0);
-			buff[ret] = 0;
-
-			if (strcmp(buff, responseCode.successRegister)) {
-				printf("Register successfull!\n"); continue;
-			}
-			else if (strcmp(buff, responseCode.errorExistedUsername)) {
-				printf("Existed Username!\n"); continue;
-			}
-			/*else {
-			printf("Chua nhap du thong tin");
-			}*/
-			if (strcmp(buff, responseCode.successLogin)) {
-				printf("Login successfull!\n");
-				function(client);
-			}
-			else {
-				printf("Username or password is wrong!\n"); continue;
-			}
-
-		}
 
 		//Send message 
 		printf("Send to server: ");
@@ -293,6 +264,16 @@ int main(int ardc, char* argv[])
 		if (ret == SOCKET_ERROR)
 			printf("Error %d: Cannot send data.", WSAGetLastError());
 		//Receive echo message 
+		ret = recv(client, buff, BUFF_SIZE, 0);
+		if (ret == SOCKET_ERROR) {
+			if (WSAGetLastError() == WSAETIMEDOUT)
+				printf("Time-out!");
+			else printf("Error %d: Cannot receive data.", WSAGetLastError());
+		}
+		else if (strlen(buff) > 0) {
+			buff[ret] = 0;
+			printf("Receive from server: %s\n", buff);
+		}
 		ret = recv(client, buff, BUFF_SIZE, 0);
 		if (ret == SOCKET_ERROR) {
 			if (WSAGetLastError() == WSAETIMEDOUT)

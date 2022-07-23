@@ -13,6 +13,7 @@
 #include "Account.h"
 #include "LocationService.h"
 #include "../Shared/Enum.h"
+#include "vector"
 
 #pragma comment (lib,"ws2_32.lib")
 
@@ -35,10 +36,13 @@ typedef struct {
 	string username = "";
 	string waitingMessage = "";
 	vector<string> responses;
+	string listData = "";
 } client;
 
 // store account list get from account.txt
 vector<Account> accountList;
+
+vector<Location> locationList;
 
 // List function
 void getAccountData();
@@ -47,6 +51,8 @@ vector<string> process(int ret, string buff, client* currentClient);
 string loginAccount(string username, string password, client* client);
 string registerAccount(string username, string password, client* client);
 string logoutAccount(client* client);
+void getLocationData();
+string getLocation(string type, client* client);
 
 /* userThread - Thread to receive the user message from client*/
 unsigned __stdcall userThread(void *param) {
@@ -70,6 +76,16 @@ unsigned __stdcall userThread(void *param) {
 
 			for (int i = 0; i < responses.size(); i++) {
 				string response = responses[i];
+				ret = send(connectedSocket, response.c_str(), strlen(response.c_str()), 0);
+				// Send response to client
+				if (ret == SOCKET_ERROR) {
+					printf("Error %d: Cannot send data to client[%s:%d]\n", WSAGetLastError(), clientIP, clientPort);
+					break;
+				}
+			}
+			if (currentClient.listData != "") {
+				string response = currentClient.listData;
+				currentClient.listData = "";
 				ret = send(connectedSocket, response.c_str(), strlen(response.c_str()), 0);
 				// Send response to client
 				if (ret == SOCKET_ERROR) {
@@ -146,6 +162,18 @@ int main(int argc, char* argv[])
 	tmp.push_back("newplace");
 	save_location("favourites.json", "quocpc", tmp);
 	*/
+	
+	/*
+	vector<Location> locations;
+	for (int i = 0; i < 5; i++)
+	{
+		Location a("a", i, "add", "descript");
+		locations.push_back(a);
+	}
+
+	json locationJsonObj = to_json_array_location(locations);
+	to_json_file(locationJsonObj, locationStore);
+	*/
 
 	//Communicate with client
 	sockaddr_in clientAddr;
@@ -181,6 +209,12 @@ void getAccountData() {
 	accountList = get_all_accounts_from_json(accountStore);
 }
 
+
+void getLocationData() {
+	locationList.clear();
+	locationList = get_all_locations_from_json(locationStore);
+
+}
 
 
 /*
@@ -280,6 +314,18 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(response);
 			}
 		}
+		else if (messageData[0] == sendMessage.GET) {
+			if (messageData.size() != 2) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else if (messageData[1] == "") {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = getLocation(messageData[1], currentClient);
+				responses.push_back(response);
+			}
+		}
 		// LOGOUT
 		else if (messageData[0] == sendMessage.LOGOUT) {
 			string response = logoutAccount(currentClient);
@@ -349,4 +395,36 @@ string logoutAccount(client* client) {
 	client->username = "";
 	return responseCode.successLogout;
 
+}
+/*
+string addLocation(int type, string name, string address, string description) {
+
+}
+*/
+
+string getLocation(string type, client* client) {
+	getLocationData();
+	if (type == "*") {
+		string responseListData = "";
+		/*
+		for (int i = 0; i < locationList.size(); i++) {
+			responseListData += locationList[i].id + "$" + locationList[i].name + "$" + locationList[i].type + "$" + locationList[i].address + "$" + locationList[i].description + "|";
+		}
+
+		client->listData = responseListData;*/
+		return responseCode.successGetLocation;
+	}
+	/*
+	else {
+		string responseListData = "";
+
+		for (int i = 0; i < locationList.size(); i++) {
+			if(locationList[i].type == type)
+			responseListData += locationList[i].id + "$" + locationList[i].name + "$" + locationList[i].type + "$" + locationList[i].address + "$" + locationList[i].description + "|";
+		}
+
+		client->listData = responseListData;
+		return responseCode.successGetLocation;
+	}
+	*/
 }

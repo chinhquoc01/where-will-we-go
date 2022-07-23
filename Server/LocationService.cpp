@@ -14,7 +14,7 @@ vector<Location> get_favourite_list(string path, string username) {
 
 bool save_location(string path, string username, vector<string> locationIds) {
 	// Lấy vector favourite location từ file favourite
-	auto favouriteLocations = get_all_favourite_locations_from_json("favourites.json");
+	auto favouriteLocations = get_all_favourite_locations_from_json(path);
 
 	bool found = false;
 	for (auto & favLocation : favouriteLocations) {
@@ -50,4 +50,19 @@ bool save_location(string path, string username, vector<string> locationIds) {
 	to_json_file(jsonArray, path);
 
 	return true;
+}
+
+vector<Location> get_locations_by_type(string type, string path = "locations.json") {
+	auto locations = get_all_locations_from_json(path);
+	if (type == "*") {
+		return locations;
+	}
+	int typeInt = stoi(type);
+	vector<Location> res;
+	for (auto location : locations) {
+		if (location.type == typeInt) {
+			res.push_back(location);
+		}
+	}
+	return res;
 }

@@ -9,7 +9,7 @@ Location::Location() {}
 /*
 Constuctor
 */
-Location::Location(string _id, string _name, int _type, string _description) {
+Location::Location(string _id, string _name, int _type, string _address, string _description) {
 	id = _id;
 	name = _name;
 	type = _type;
@@ -19,7 +19,7 @@ Location::Location(string _id, string _name, int _type, string _description) {
 /*
 Constructor
 */
-Location::Location(string _name, int _type, string _description) {
+Location::Location(string _name, int _type, string _address, string _description) {
 	id = random_string(6);
 	name = _name;
 	type = _type;

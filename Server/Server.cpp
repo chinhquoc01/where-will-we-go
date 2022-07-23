@@ -22,13 +22,13 @@
 
 int clientPort;
 char clientIP[INET_ADDRSTRLEN];
+SOCKET sock[4048];
 SOCKET connSock;
 
 const string accountStore = "accounts.json";
+const string locationStore = "locations.json";
 
-//const ResponseCode responseCode;
-
-
+const ResponseCode responseCode;
 
 
 /* userThread - Thread to receive the user message from client*/
@@ -36,6 +36,9 @@ unsigned __stdcall userThread(void *param) {
 	char buff[BUFF_SIZE];
 	int ret;
 	SOCKET connectedSocket = (SOCKET)param;
+	for(int i=0; sock[i] != INVALID_SOCKET, i++) {
+
+	}
 
 
 	while (1) {
@@ -111,6 +114,31 @@ int main(int argc, char* argv[])
 	for (auto a : accounts2) {
 		cout << a.username << ", " << a.password << endl;
 	}
+
+
+	// Demo share
+	vector<Location> location = get_all_locations_from_json(locationStore);
+	string id, user_name;
+	string sendtoclient;
+	bool check_acc = false;
+	for (auto a : accounts2) {
+		if (a.username == user_name) {
+			check_acc = true;
+			for (auto l : location) {
+				if (l.id == id) {
+					sendtoclient = id;
+					//gui den client cua user_name
+					send();
+				}
+			}
+		}
+	}
+	if (check_acc == false) {
+		sendtoclient = responseCode.notFoundUsername;   //Khong tim thay user_name
+		send();
+	}
+
+	//Demo add
 
 
 	//Communicate with client

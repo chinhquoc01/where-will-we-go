@@ -286,7 +286,10 @@ int main(int ardc, char* argv[])
 		messageLen = strlen(buff);
 		if (messageLen == 0) break;
 
-		ret = send(client, buff, messageLen, 0);
+		string message(buff);
+		message += "\r\n";
+
+		ret = send(client, message.c_str(), strlen(message.c_str()), 0);
 		if (ret == SOCKET_ERROR)
 			printf("Error %d: Cannot send data.", WSAGetLastError());
 		//Receive echo message 

@@ -7,9 +7,10 @@ public:
 	string name;
 	int type;
 	string description;
+	string address;
 	Location();
-	Location(string _id, string _name, int _type, string _description);
-	Location(string _name, int _type, string _description);
+	Location(string _id, string _name, int _type, string _description, string _address);
+	Location(string _name, int _type, string _description, string _address);
 	json to_json_obj();
 };
 

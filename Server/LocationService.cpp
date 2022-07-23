@@ -1,4 +1,5 @@
-﻿#include "LocationService.h"
+﻿#pragma once
+#include "LocationService.h"
 
 vector<Location> get_all_location(string path) {
 	auto locations = get_all_locations_from_json(path);
@@ -6,10 +7,7 @@ vector<Location> get_all_location(string path) {
 }
 
 
-
-
-
-vector<Location> get_locations_by_type(string type, string path = "locations.json") {
+vector<Location> get_locations_by_type(string type, string path) {
 	auto locations = get_all_locations_from_json(path);
 	if (type == "*") {
 		return locations;

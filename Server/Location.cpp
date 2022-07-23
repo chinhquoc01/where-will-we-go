@@ -1,5 +1,4 @@
 ﻿#include "Location.h"
-#include "Common.h"
 
 /*
 Constructor
@@ -9,21 +8,23 @@ Location::Location() {}
 /*
 Constuctor
 */
-Location::Location(string _id, string _name, int _type, string _description) {
+Location::Location(string _id, string _name, int _type, string _description, string _address) {
 	id = _id;
 	name = _name;
 	type = _type;
 	description = _description;
+	address = _address;
 }
 
 /*
 Constructor
 */
-Location::Location(string _name, int _type, string _description) {
+Location::Location(string _name, int _type, string _description, string _address) {
 	id = random_string(6);
 	name = _name;
 	type = _type;
 	description = _description;
+	address = _address;
 }
 
 /*
@@ -35,6 +36,7 @@ json Location::to_json_obj() {
 	jsonObj["name"] = name;
 	jsonObj["type"] = type;
 	jsonObj["description"] = description;
+	jsonObj["address"] = address;
 	return jsonObj;
 }
 
@@ -62,7 +64,7 @@ vector<Location> get_all_locations_from_json(string path) {
 	for (auto it = j.begin(); it != j.end(); ++it)
 	{
 		json jsonObj(*it);
-		Location l(jsonObj["id"], jsonObj["name"], jsonObj["type"], jsonObj["description"]);
+		Location l(jsonObj["id"], jsonObj["name"], jsonObj["type"], jsonObj["description"], jsonObj["address"]);
 		res.push_back(l);
 	}
 	return res;

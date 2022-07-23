@@ -11,7 +11,7 @@
 #include <fstream>
 #include "Common.h"
 #include "Account.h"
-#include "Location.h"
+#include "LocationService.h"
 #include "../Shared/Enum.h"
 
 #pragma comment (lib,"ws2_32.lib")
@@ -115,6 +115,13 @@ int main(int argc, char* argv[])
 		cout << a.username << ", " << a.password << endl;
 	}
 
+	/*auto ids = get_favourite_location_id("favourites.json", "quocpc");
+	auto tmp = get_all_favourite_locations_from_json("favourites.json");*/
+
+	// Demo thêm địa điểm yêu thích
+	vector<string> tmp;
+	tmp.push_back("newplace");
+	save_location("favourites.json", "quocpc", tmp);
 
 	// Demo share
 	vector<Location> location = get_all_locations_from_json(locationStore);

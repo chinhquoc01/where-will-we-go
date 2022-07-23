@@ -33,3 +33,13 @@ void to_json_file(json j, string path) {
 	std::ofstream o(path);
 	o << std::setw(4) << j << std::endl;
 }
+
+//json to_json_array_from_vector(vector<BaseClass*> v) {
+//	auto j = json::array();
+//	for (auto l : v)
+//	{
+//		auto jsonObj = (*l).to_json_obj();
+//		j.push_back(jsonObj);
+//	}
+//	return j;
+//}

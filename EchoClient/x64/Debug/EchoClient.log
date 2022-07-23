@@ -1,0 +1,6 @@
+﻿  stdafx.cpp
+  EchoClient.cpp
+c:\users\nghuu\onedrive\desktop\new folder\where-will-we-go\echoclient\echoclient.cpp(69): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  EchoClient.vcxproj -> C:\Users\nghuu\OneDrive\Desktop\New folder\where-will-we-go\x64\Debug\EchoClient.exe
+  EchoClient.vcxproj -> C:\Users\nghuu\OneDrive\Desktop\New folder\where-will-we-go\x64\Debug\EchoClient.pdb (Full PDB)

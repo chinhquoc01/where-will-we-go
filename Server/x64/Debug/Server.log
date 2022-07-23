@@ -1,0 +1,4 @@
+﻿  Server.cpp
+c:\users\nghuu\onedrive\desktop\new folder\where-will-we-go\server\server.cpp(71): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  Server.vcxproj -> C:\Users\nghuu\OneDrive\Desktop\New folder\where-will-we-go\x64\Debug\Server.exe
+  Server.vcxproj -> C:\Users\nghuu\OneDrive\Desktop\New folder\where-will-we-go\x64\Debug\Server.pdb (Full PDB)

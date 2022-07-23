@@ -8,6 +8,9 @@
 #include <Winsock2.h>
 #include <WS2tcpip.h>
 #include <string>
+#include "../Shared/Enum.h"
+#include "iostream"
+
 #define SERVER_PORT 5500 
 #define SERVER_ADDR "127.0.0.1" 
 #define BUFF_SIZE 2048 
@@ -17,6 +20,34 @@ using namespace std;
 
 char buff[BUFF_SIZE];
 
+
+string resolveResponseCode(string code) {
+	const ResponseCode responseCode;
+	if (code == responseCode.successRegister) {
+		return "Register successfully";
+	}
+	else if (code == responseCode.errorExistedUsername) {
+		return "Error: Account is already existed";
+	}
+	else if (code == responseCode.successLogin) {
+		return "Login successfully";
+	}
+	else if (code == responseCode.errorInvalidAccount) {
+		return "Error: Invalid account";
+	}
+	else if (code == responseCode.errorAlreadyLoggedIn) {
+		return "Error: Account is already logged in";
+	}
+	else if (code == responseCode.successLogout) {
+		return "Logout successfully";
+	}
+	else if (code == responseCode.errorUnauthorize) {
+		return "Error: Unauthorize";
+	}
+	else {
+		return "Cannot resolve response code: " + code;
+	}
+}
 
 int main(int ardc, char* argv[])
 {
@@ -75,7 +106,9 @@ int main(int ardc, char* argv[])
 		}
 		else if (strlen(buff) > 0) {
 			buff[ret] = 0;
-			printf("Receive from server: %s\n", buff);
+			string responseCode(buff);
+
+			cout << "Receive from server: " << resolveResponseCode(responseCode) << endl;
 		}
 	}
 

@@ -3,8 +3,11 @@
 #endif
 
 const struct ResponseCode {
+	// REGISTER 
 	char* successRegister = "100";
 	char* errorExistedUsername = "101";
+
+	// LOGIN
 	char* successLogin = "110";
 	char* errorInvalidAccount = "111";
 	char* errorAlreadyLoggedIn = "112";

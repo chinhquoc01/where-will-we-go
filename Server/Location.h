@@ -1,5 +1,5 @@
 #include "Common.h"
-
+#pragma once
 class Location
 {
 public:

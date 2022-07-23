@@ -102,7 +102,6 @@ void recvLocationData(SOCKET client) {
 					printf("Error when get list location.");
 					break;
 				}
-				printf("Receive from server: %s\n", buff);
 			}
 		}
 
@@ -493,6 +492,7 @@ int main(int ardc, char *argv[])
 	int ret, messageLen;
 	while (1)
 	{
+		/*
 		register_login(client);
 		if (strcmp(select_function, "3") == 0)
 			break;
@@ -539,7 +539,7 @@ int main(int ardc, char *argv[])
 				Sleep(1000);
 				continue;
 			}
-		}
+		}*/
 
 		/*
 		//Send message
@@ -566,6 +566,32 @@ int main(int ardc, char *argv[])
 			printf("Receive from server: %s\n", buff);
 		}
 		*/
+
+		
+		//Send message
+		printf("Send to server: ");
+		gets_s(buff, BUFF_SIZE);
+		messageLen = strlen(buff);
+		if (messageLen == 0) break;
+
+		string message(buff);
+		message += "\r\n";
+
+		ret = send(client, message.c_str(), strlen(message.c_str()), 0);
+		if (ret == SOCKET_ERROR)
+		printf("Error %d: Cannot send data.", WSAGetLastError());
+		//Receive echo message
+		ret = recv(client, buff, BUFF_SIZE, 0);
+		if (ret == SOCKET_ERROR) {
+		if (WSAGetLastError() == WSAETIMEDOUT)
+		printf("Time-out!");
+		else printf("Error %d: Cannot receive data.", WSAGetLastError());
+		}
+		else if (strlen(buff) > 0) {
+		buff[ret] = 0;
+		printf("Receive from server: %s\n", buff);
+		}
+	
 
 	}
 

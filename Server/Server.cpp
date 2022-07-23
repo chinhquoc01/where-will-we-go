@@ -153,6 +153,7 @@ int main(int argc, char* argv[])
 	}
 	*/
 
+
 	/*auto ids = get_favourite_location_id("favourites.json", "quocpc");
 	auto tmp = get_all_favourite_locations_from_json("favourites.json");*/
 
@@ -375,7 +376,7 @@ string registerAccount(string username, string password, client* client) {
 	getAccountData();
 
 	for (int i = 0; i < accountList.size(); i++) {
-		if (accountList[i].username == username && accountList[i].password == password) {
+		if (accountList[i].username == username) {
 			return responseCode.errorExistedUsername;
 		}
 	}

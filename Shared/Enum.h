@@ -21,7 +21,13 @@ const struct ResponseCode {
 	char* successDelete = "160";
 	char* successShare = "170";
 	char* notFoundUsername = "171";
-	char* successLogout = "270";
+	char* successGetSharedList = "180";
+	char* successAccept = "190";
+	char* successReject = "200";
+	char* successBackup = "210";
+	char* successRestore = "220";
+	char* errorNoBackup = "221";
+	char* successLogout = "230";
 	char* invalidMessage = "999";
 	char* errorUnauthorize = "998";
 };

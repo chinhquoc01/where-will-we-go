@@ -13,7 +13,6 @@ Location::Location(string _id, string _name, int _type, string _description, str
 	id = _id;
 	name = _name;
 	type = _type;
-	address = _address;
 	description = _description;
 	address = _address;
 }
@@ -26,7 +25,6 @@ Location::Location(string _name, int _type, string _description, string _address
 	id = random_string(6);
 	name = _name;
 	type = _type;
-	address = _address;
 	description = _description;
 	address = _address;
 }
@@ -40,7 +38,6 @@ json Location::to_json_obj()
 	jsonObj["id"] = id;
 	jsonObj["name"] = name;
 	jsonObj["type"] = type;
-	jsonObj["address"] = address;
 	jsonObj["description"] = description;
 	jsonObj["address"] = address;
 	return jsonObj;

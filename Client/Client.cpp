@@ -8,8 +8,15 @@
 #include <Winsock2.h>
 #include <WS2tcpip.h>
 #include <string>
-
+#include "vector"
 #include "../Shared/Enum.h"
+#include "../Server/Account.h"
+#include "../Server/Common.h"
+#include "../Server/Location.h"
+#include <iostream>
+#include <fstream>
+#include "conio.h"
+
 #define SERVER_PORT 5500
 #define SERVER_ADDR "127.0.0.1"
 #define BUFF_SIZE 2048
@@ -25,6 +32,83 @@ char select_function[SELECT_SIZE];
 
 const ResponseCode responseCode;
 const Message message;
+
+vector<Location> locationList;
+
+/*
+* @function split: split string by delim character
+*
+* @param string: string want to split
+*
+* @param delim: character to split
+*
+* @return: array string after split
+*/
+vector<string> split(const string &s, char delim) {
+	vector<string> result;
+	stringstream ss(s);
+	string item;
+
+	while (getline(ss, item, delim)) {
+		result.push_back(item);
+	}
+
+	return result;
+}
+
+void recvLocationData(SOCKET client) {
+
+	int ret;
+
+	ret = recv(client, buff, BUFF_SIZE, 0);
+	if (ret == SOCKET_ERROR) {
+		if (WSAGetLastError() == WSAETIMEDOUT)
+			printf("Time-out!");
+		else printf("Error %d: Cannot receive data.", WSAGetLastError());
+	}
+	else if (strlen(buff) > 0) {
+		buff[ret] = 0;
+		printf("Receive from server: %s\n", buff);
+	}
+	string responseCodeGetLocation(buff);
+	if (responseCodeGetLocation == responseCode.successGetLocation) {
+		ret = recv(client, buff, BUFF_SIZE, 0);
+		if (ret == SOCKET_ERROR) {
+			if (WSAGetLastError() == WSAETIMEDOUT)
+				printf("Time-out!");
+			else printf("Error %d: Cannot receive data.", WSAGetLastError());
+		}
+		else if (strlen(buff) > 0) {
+			buff[ret] = 0;
+			printf("Receive from server: %s\n", buff);
+		}
+
+		string strLength(buff);
+		int length = stoi(strLength);
+		for (int i = 0; i < length; i++) {
+
+			ret = recv(client, buff, BUFF_SIZE, 0);
+			if (ret == SOCKET_ERROR) {
+				if (WSAGetLastError() == WSAETIMEDOUT)
+					printf("Time-out!");
+				else printf("Error %d: Cannot receive data.", WSAGetLastError());
+			}
+			else if (strlen(buff) > 0) {
+				buff[ret] = 0;
+				string response(buff);
+				cout << response << endl;
+				vector<string> messageData = split(response, '$');
+				if (messageData.size() < 5) {
+					printf("Error when get list location.");
+					break;
+				}
+				printf("Receive from server: %s\n", buff);
+			}
+		}
+
+		getch();
+	}
+}
 
 // input username ,password
 void input()
@@ -101,7 +185,7 @@ void register_login(SOCKET client)
 }
 
 // Giao dien cac chuc nang
-void function(SOCKET client)
+void clientProcess(SOCKET client)
 {
 	system("cls");
 
@@ -189,6 +273,7 @@ void function(SOCKET client)
 				send(client, buff, strlen(buff), 0);
 
 				// recv
+				recvLocationData(client);
 			}
 			break;
 		}
@@ -367,6 +452,7 @@ void function(SOCKET client)
 	}
 }
 
+
 int main(int ardc, char *argv[])
 {
 	// Inittiate WinSock
@@ -444,7 +530,7 @@ int main(int ardc, char *argv[])
 			{
 				printf("Login successfull!\n");
 				Sleep(1000);
-				function(client);
+				clientProcess(client);
 				continue;
 			}
 			else
@@ -455,29 +541,32 @@ int main(int ardc, char *argv[])
 			}
 		}
 
-		//	//Send message
-		//	printf("Send to server: ");
-		//	gets_s(buff, BUFF_SIZE);
-		//	messageLen = strlen(buff);
-		//	if (messageLen == 0) break;
+		/*
+		//Send message
+		printf("Send to server: ");
+		gets_s(buff, BUFF_SIZE);
+		messageLen = strlen(buff);
+		if (messageLen == 0) break;
 
-		//	string message(buff);
-		//	message += "\r\n";
+		string message(buff);
+		message += "\r\n";
 
-		//	ret = send(client, message.c_str(), strlen(message.c_str()), 0);
-		//	if (ret == SOCKET_ERROR)
-		//		printf("Error %d: Cannot send data.", WSAGetLastError());
-		//	//Receive echo message
-		//	ret = recv(client, buff, BUFF_SIZE, 0);
-		//	if (ret == SOCKET_ERROR) {
-		//		if (WSAGetLastError() == WSAETIMEDOUT)
-		//			printf("Time-out!");
-		//		else printf("Error %d: Cannot receive data.", WSAGetLastError());
-		//	}
-		//	else if (strlen(buff) > 0) {
-		//		buff[ret] = 0;
-		//		printf("Receive from server: %s\n", buff);
-		//	}
+		ret = send(client, message.c_str(), strlen(message.c_str()), 0);
+		if (ret == SOCKET_ERROR)
+			printf("Error %d: Cannot send data.", WSAGetLastError());
+		//Receive echo message
+		ret = recv(client, buff, BUFF_SIZE, 0);
+		if (ret == SOCKET_ERROR) {
+			if (WSAGetLastError() == WSAETIMEDOUT)
+				printf("Time-out!");
+			else printf("Error %d: Cannot receive data.", WSAGetLastError());
+		}
+		else if (strlen(buff) > 0) {
+			buff[ret] = 0;
+			printf("Receive from server: %s\n", buff);
+		}
+		*/
+
 	}
 
 	// Close socket

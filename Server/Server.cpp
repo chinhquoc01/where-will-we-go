@@ -11,7 +11,7 @@
 #include <fstream>
 #include "Common.h"
 #include "Account.h"
-#include "LocationService.h"
+#include "Location.h"
 #include "../Shared/Enum.h"
 #include "vector"
 
@@ -36,7 +36,7 @@ typedef struct {
 	string username = "";
 	string waitingMessage = "";
 	vector<string> responses;
-	string listData = "";
+	vector<string> listData;
 } client;
 
 // store account list get from account.txt
@@ -83,15 +83,28 @@ unsigned __stdcall userThread(void *param) {
 					break;
 				}
 			}
-			if (currentClient.listData != "") {
-				string response = currentClient.listData;
-				currentClient.listData = "";
-				ret = send(connectedSocket, response.c_str(), strlen(response.c_str()), 0);
-				// Send response to client
+
+			cout << currentClient.listData.size() << endl;
+			if (currentClient.listData.size() != 0) {
+				string length = to_string(currentClient.listData.size());
+				ret = send(connectedSocket, length.c_str(), strlen(length.c_str()), 0);
 				if (ret == SOCKET_ERROR) {
 					printf("Error %d: Cannot send data to client[%s:%d]\n", WSAGetLastError(), clientIP, clientPort);
 					break;
 				}
+
+				for (int i = 0; i < currentClient.listData.size(); i++) {
+					string response = currentClient.listData[i];
+					cout << "Sending data..." << endl;
+					Sleep(200);
+					ret = send(connectedSocket, response.c_str(), strlen(response.c_str()), 0);
+
+					if (ret == SOCKET_ERROR) {
+						printf("Error %d: Cannot send data to client[%s:%d]\n", WSAGetLastError(), clientIP, clientPort);
+						break;
+					}
+				}
+				currentClient.listData.clear();
 			}
 		}
 	}
@@ -405,27 +418,26 @@ string addLocation(int type, string name, string address, string description) {
 
 string getLocation(string type, client* client) {
 	getLocationData();
+	client->listData.clear();
 	if (type == "*") {
 		string responseListData = "";
-		/*
 		for (int i = 0; i < locationList.size(); i++) {
-			responseListData += locationList[i].id + "$" + locationList[i].name + "$" + locationList[i].type + "$" + locationList[i].address + "$" + locationList[i].description + "|";
+			responseListData = locationList[i].id + "$" + locationList[i].name + "$" + to_string(locationList[i].type) + "$" + locationList[i].description + "$" + locationList[i].address;
+			client->listData.push_back(responseListData);
 		}
-
-		client->listData = responseListData;*/
 		return responseCode.successGetLocation;
 	}
-	/*
 	else {
 		string responseListData = "";
 
 		for (int i = 0; i < locationList.size(); i++) {
-			if(locationList[i].type == type)
-			responseListData += locationList[i].id + "$" + locationList[i].name + "$" + locationList[i].type + "$" + locationList[i].address + "$" + locationList[i].description + "|";
+			if (to_string(locationList[i].type) == type) {
+				responseListData = locationList[i].id + "$" + locationList[i].name + "$" + to_string(locationList[i].type) + "$" + locationList[i].description + "$" + locationList[i].address;
+				client->listData.push_back(responseListData);
+
+			}
 		}
 
-		client->listData = responseListData;
 		return responseCode.successGetLocation;
 	}
-	*/
 }

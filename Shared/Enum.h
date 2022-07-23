@@ -7,6 +7,7 @@ const struct ResponseCode {
 	char* errorExistedUsername = "101";
 	char* successLogin = "110";
 	char* errorInvalidAccount = "111";
+	char* errorAlreadyLoggedIn = "112";
 	char* successGetLocation = "120";
 	char* successGetFavorite = "130";
 	char* successSave = "140";
@@ -16,7 +17,9 @@ const struct ResponseCode {
 	char* errorNotExistType = "152";
 	char* successDelete = "160";
 	char* successShare = "170";
+	char* successLogout = "270";
 	char* invalidMessage = "999";
+	char* errorUnauthorize = "998";
 };
 
 const struct Message {

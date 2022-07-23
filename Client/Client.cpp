@@ -19,7 +19,7 @@
 using namespace std;
 
 char buff[BUFF_SIZE];
-char select[SELECT_SIZE];
+char select_function[SELECT_SIZE];
 
 const ResponseCode responseCode;
 const Message message;
@@ -31,13 +31,13 @@ void input() {
 
 	system("cls");
 
-	if (strcmp(select, "1")) {
+	if (strcpy(select_function, "1")) {
 		strcpy(buff, message.REGISTER);
 		strcat(buff, SEPARATOR_CHAR);
 		printf("REGISTER\n");
 	}
 
-	else if (strcmp(select, "2")) {
+	else if (strcpy(select_function, "2")) {
 		strcpy(buff, message.LOGIN);
 		strcat(buff, SEPARATOR_CHAR);
 		printf("LOGIN\n");
@@ -56,7 +56,7 @@ void input() {
 }
 
 //Giao dien dang ky dang nhap
-void register_login(SOCKET client, int ret) {
+void register_login(SOCKET client) {
 	
 	printf("1. Register\n");
 	printf("2. Login\n");
@@ -64,19 +64,19 @@ void register_login(SOCKET client, int ret) {
 
 	printf("Enter number to select function: ");
 	fflush(stdin);
-	gets_s(select, SELECT_SIZE);
+	gets_s(select_function, SELECT_SIZE);
 
-	if (strcmp(select, "1") == 0 || strcmp(select, "2") == 0) {
+	if (strcmp(select_function, "1") == 0 || strcmp(select_function, "2") == 0) {
 		
 		input();
 		//gui username, password
 		send(client, buff, strlen(buff), 0);
 	}
 
-	else if (strcmp(select, "3") == 0) {	}
+	else if (strcmp(select_function, "3")) {	}
 	else {
 		printf("Function doesn't exist\n");
-		strcpy(select, "0");
+		strcpy(select_function, "0");
 	}
 }
 
@@ -93,9 +93,9 @@ void function(SOCKET client) {
 
 		printf("Enter number to select function: ");
 		fflush(stdin);
-		gets_s(select, SELECT_SIZE);
+		gets_s(select_function, SELECT_SIZE);
 
-		int key = atoi(select);
+		int key = atoi(select_function);
 		switch (key) {
 		case 1: {
 			system("cls");
@@ -108,11 +108,11 @@ void function(SOCKET client) {
 				printf("*. All location\n");
 				printf("0. Comeback\n");
 				fflush(stdin);
-				gets_s(select, SELECT_SIZE);
-				if (strcmp(select, "0")) break;
+				gets_s(select_function, SELECT_SIZE);
+				if (strcpy(select_function, "0")) break;
 				strcpy(buff, message.GET);
 				strcat(buff, SEPARATOR_CHAR);
-				strcat(buff, select);
+				strcat(buff, select_function);
 
 				send(client, buff, strlen(buff), 0);
 
@@ -122,7 +122,7 @@ void function(SOCKET client) {
 		case 2: {
 			system("cls");
 			while (1) {
-				printf("Select type of list location\n");
+				printf("Select IDType of list location\n");
 				printf("1. Restaurant\n");
 				printf("2. Coffee\n");
 				printf("3. Cinema\n");
@@ -130,11 +130,11 @@ void function(SOCKET client) {
 				printf("*. All location\n");
 				printf("0. Comeback\n");
 				fflush(stdin);
-				gets_s(select, SELECT_SIZE);
-				if (strc(smpelect, "0")) break;
+				gets_s(select_function, SELECT_SIZE);
+				if (strcmp(select_function, "0")) break;
 				strcpy(buff, message.GETFAVOURITE);
 				strcat(buff, SEPARATOR_CHAR);
-				strcat(buff, select);
+				strcat(buff, select_function);
 
 				send(client, buff, strlen(buff), 0);
 
@@ -143,19 +143,70 @@ void function(SOCKET client) {
 		}
 		case 3: {
 			system("cls");
-		}
+			strcpy(buff, "ADD");
+			strcat(buff, SEPARATOR_CHAR);
+			char inp[BUFF_SIZE];
+			printf("Add new location\n");
+			printf("Name: ");
+			fflush(stdin);
+			gets_s(inp);
+			strcat(buff, inp);
+
+			printf("IDType: ");
+			fflush(stdin);
+			gets_s(inp);
+			strcat(buff, inp);
+
+			printf("Address: ");
+			fflush(stdin);
+			gets_s(inp);
+			strcat(buff, inp);
+
+			printf("Description: ");
+			fflush(stdin);
+			gets_s(inp);
+			strcat(buff, inp);
+
+			send(client, buff, strlen(buff), 0);
+
+			//recv
+		} break;
 		case 4: {
 			system("cls");
-		}
+
+			strcpy(buff, message.GETSHARELIST);
+
+			send(client, buff, strlen(buff), 0);
+
+			//recv
+		} break;
 		case 5: {
 			system("cls");
-		}
+
+			strcpy(buff, message.BACKUP);
+
+			send(client, buff, strlen(buff), 0);
+
+			//recv
+		} break;
 		case 6: {
 			system("cls");
-		}
-		case 7: {
 
-		}
+			strcpy(buff, message.RESTORE);
+
+			send(client, buff, strlen(buff), 0);
+
+			//recv
+		} break;
+		case 7: {
+			system("cls");
+
+			strcpy(buff, message.LOGOUT);
+
+			send(client, buff, strlen(buff), 0);
+
+			//recv
+		} break;
 		default:
 			printf("Function doesn't exist\n");
 		}
@@ -200,8 +251,8 @@ int main(int ardc, char* argv[])
 	int ret, messageLen;
 	while (1) {
 		register_login(client, ret);
-		if (strcmp(select, "3") == 0) break;
-		else if (strcmp(select, "0") == 0) {
+		if (strcmp(select_function, "3") == 0) break;
+		else if (strcmp(select_function, "0") == 0) {
 			system("cls");
 			continue;
 		}

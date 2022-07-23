@@ -22,9 +22,11 @@
 
 int clientPort;
 char clientIP[INET_ADDRSTRLEN];
+SOCKET sock[4048];
 SOCKET connSock;
 
 const string accountStore = "accounts.json";
+const string locationStore = "locations.json";
 
 const ResponseCode responseCode;
 const Message sendMessage;
@@ -250,7 +252,7 @@ vector<string> process(int ret, string buff, client* currentClient) {
 			continue;
 		}
 		// split message
-		vector<string> messageData = split(messages[i], ' ');
+		vector<string> messageData = split(messages[i], '$');
 
 		// LOGIN
 		if (messageData[0] == sendMessage.LOGIN) {

@@ -31,25 +31,25 @@ void input() {
 
 	system("cls");
 
-	if (strcpy(select, "1")) {
+	if (strcmp(select, "1")) {
 		strcpy(buff, message.REGISTER);
 		strcat(buff, SEPARATOR_CHAR);
 		printf("REGISTER\n");
 	}
 
-	else if (strcpy(select, "2")) {
+	else if (strcmp(select, "2")) {
 		strcpy(buff, message.LOGIN);
 		strcat(buff, SEPARATOR_CHAR);
 		printf("LOGIN\n");
 	}
 
-	printf("Account: \n");
+	printf("Account: ");
 	fflush(stdin);
 	gets_s(temp, BUFF_SIZE);
 	strcat(buff, temp);
 	strcat(buff, SEPARATOR_CHAR);
 
-	printf("Password: \n");
+	printf("Password: ");
 	fflush(stdin);
 	gets_s(temp, BUFF_SIZE);
 	strcat(buff, temp);
@@ -73,7 +73,7 @@ void register_login(SOCKET client, int ret) {
 		send(client, buff, strlen(buff), 0);
 	}
 
-	else if (strcmp(select, "3")) {	}
+	else if (strcmp(select, "3") == 0) {	}
 	else {
 		printf("Function doesn't exist\n");
 		strcpy(select, "0");
@@ -109,7 +109,7 @@ void function(SOCKET client) {
 				printf("0. Comeback\n");
 				fflush(stdin);
 				gets_s(select, SELECT_SIZE);
-				if (strcpy(select, "0")) break;
+				if (strcmp(select, "0")) break;
 				strcpy(buff, message.GET);
 				strcat(buff, SEPARATOR_CHAR);
 				strcat(buff, select);
@@ -131,7 +131,7 @@ void function(SOCKET client) {
 				printf("0. Comeback\n");
 				fflush(stdin);
 				gets_s(select, SELECT_SIZE);
-				if (strcpy(select, "0")) break;
+				if (strc(smpelect, "0")) break;
 				strcpy(buff, message.GETFAVOURITE);
 				strcat(buff, SEPARATOR_CHAR);
 				strcat(buff, select);
@@ -200,8 +200,8 @@ int main(int ardc, char* argv[])
 	int ret, messageLen;
 	while (1) {
 		register_login(client, ret);
-		if (strcpy(select, "3")) break;
-		else if (strcpy(select, "0")) {
+		if (strcmp(select, "3") == 0) break;
+		else if (strcmp(select, "0") == 0) {
 			system("cls");
 			continue;
 		}
@@ -210,16 +210,16 @@ int main(int ardc, char* argv[])
 			ret = recv(client, buff, BUFF_SIZE, 0);
 			buff[ret] = 0;
 
-			if (strcpy(buff, responseCode.successRegister)) {
+			if (strcmp(buff, responseCode.successRegister)) {
 				printf("Register successfull!\n"); continue;
 			}
-			else if (strcpy(buff, responseCode.errorExistedUsername)) {
+			else if (strcmp(buff, responseCode.errorExistedUsername)) {
 				printf("Existed Username!\n"); continue;
 			}
 			/*else {
 			printf("Chua nhap du thong tin");
 			}*/
-			if (strcpy(buff, responseCode.successLogin)) {
+			if (strcmp(buff, responseCode.successLogin)) {
 				printf("Login successfull!\n");
 				function(client);
 			}

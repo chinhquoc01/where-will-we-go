@@ -51,8 +51,8 @@ unsigned __stdcall userThread(void *param) {
 	char buff[BUFF_SIZE];
 	int ret;
 	SOCKET connectedSocket = (SOCKET)param;
-
 	client currentClient;
+
 	while (1) {
 		ret = recv(connectedSocket, buff, BUFF_SIZE, 0);
 		if (ret == SOCKET_ERROR) {
@@ -167,7 +167,6 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
-
 
 /*
 * @function getAccountData: function to get account data from file account.json and store in account list
@@ -347,4 +346,5 @@ string logoutAccount(client* client) {
 
 	client->username = "";
 	return responseCode.successLogout;
+
 }

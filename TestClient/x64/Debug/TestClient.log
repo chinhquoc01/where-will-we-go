@@ -1,5 +1,0 @@
-﻿  TestClient.cpp
-c:\users\nghuu\onedrive\desktop\new folder\where-will-we-go\testclient\testclient.cpp(56): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-c:\users\nghuu\onedrive\desktop\new folder\where-will-we-go\testclient\testclient.cpp(62): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
-  TestClient.vcxproj -> C:\Users\nghuu\OneDrive\Desktop\New folder\where-will-we-go\x64\Debug\TestClient.exe
-  TestClient.vcxproj -> C:\Users\nghuu\OneDrive\Desktop\New folder\where-will-we-go\x64\Debug\TestClient.pdb (Full PDB)

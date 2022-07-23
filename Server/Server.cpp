@@ -26,9 +26,11 @@ SOCKET connSock;
 
 const string accountStore = "accounts.json";
 
+const ResponseCode responseCode;
+const Message sendMessage;
+
 typedef struct {
 	string username = "";
-	bool isLoggedIn = false;
 	string waitingMessage = "";
 	vector<string> responses;
 } client;
@@ -36,19 +38,19 @@ typedef struct {
 // store account list get from account.txt
 vector<Account> accountList;
 
-//const ResponseCode responseCode;
-
 // List function
 void getAccountData();
 vector<string> split(const string &s, char delim);
 vector<string> process(int ret, string buff, client* currentClient);
+string loginAccount(string username, string password, client* client);
+string registerAccount(string username, string password, client* client);
+string logoutAccount(client* client);
 
 /* userThread - Thread to receive the user message from client*/
 unsigned __stdcall userThread(void *param) {
 	char buff[BUFF_SIZE];
 	int ret;
 	SOCKET connectedSocket = (SOCKET)param;
-	
 	client currentClient;
 
 	while (1) {
@@ -62,12 +64,10 @@ unsigned __stdcall userThread(void *param) {
 			buff[ret] = '\0';
 			string stringBuff(buff);
 
-			process(ret, stringBuff, &currentClient);
-			cout << currentClient.responses.size();
+			vector<string> responses = process(ret, stringBuff, &currentClient);
 
-			for (int i = 0; i < currentClient.responses.size(); i++) {
-				string response = currentClient.responses[i];
-				cout << response << endl;
+			for (int i = 0; i < responses.size(); i++) {
+				string response = responses[i];
 				ret = send(connectedSocket, response.c_str(), strlen(response.c_str()), 0);
 				// Send response to client
 				if (ret == SOCKET_ERROR) {
@@ -133,14 +133,17 @@ int main(int argc, char* argv[])
 	for (auto a : accounts2) {
 		cout << a.username << ", " << a.password << endl;
 	}
+	*/
 
 	/*auto ids = get_favourite_location_id("favourites.json", "quocpc");
 	auto tmp = get_all_favourite_locations_from_json("favourites.json");*/
 
+	/*
 	// Demo thêm địa điểm yêu thích
 	vector<string> tmp;
 	tmp.push_back("newplace");
 	save_location("favourites.json", "quocpc", tmp);
+	*/
 
 	//Communicate with client
 	sockaddr_in clientAddr;
@@ -199,7 +202,6 @@ vector<string> split(const string &s, char delim) {
 	return result;
 }
 
-
 /*
 * @function process: function to process action receive from client
 *
@@ -212,13 +214,14 @@ vector<string> split(const string &s, char delim) {
 * @return array string contain list reponses
 */
 vector<string> process(int ret, string buff, client* currentClient) {
+	vector<string> responses;
 	if (ret == SOCKET_ERROR) {
 		cout << "[-] Error " << WSAGetLastError() << ": Cannot receive data.\n";
-		return currentClient->responses;
+		return responses;
 	}
 	else if (ret == 0) {
 		printf("[-] Client disconnects.\n");
-		return currentClient->responses;
+		return responses;
 	}
 
 	string temp = currentClient->waitingMessage;
@@ -243,35 +246,105 @@ vector<string> process(int ret, string buff, client* currentClient) {
 	// process each message
 	for (int i = 0; i < messages.size(); i++) {
 		if (messages[i] == "") {
-			currentClient->responses.push_back("99");
+			responses.push_back("999");
 			continue;
 		}
 		// split message
 		vector<string> messageData = split(messages[i], ' ');
 
-		// if message type: USER username
-		if (messageData[0] == "USER") {
-			if (messageData.size() == 1) {
-				currentClient->responses.push_back("99");
+		// LOGIN
+		if (messageData[0] == sendMessage.LOGIN) {
+			if (messageData.size() != 3) {
+				responses.push_back("999");
 			}
-			else if (messageData[1] == "") {
-				currentClient->responses.push_back("99");
+			else if (messageData[1] == "" || messageData[2] == "") {
+				responses.push_back("999");
 			}
 			else {
-				//currentClient->responses.push_back(login(messageData[1], currentClient));
-				currentClient->responses.push_back("10");
+				string response = loginAccount(messageData[1], messageData[2], currentClient);
+				responses.push_back(response);
 			}
 		}
-		// if message type: BYE
-		else if (messageData[0] == "BYE") {
-			//currentClient->responses.push_back(logout(currentClient));
-			currentClient->responses.push_back("30");
+		// REGISTER
+		else if (messageData[0] == sendMessage.REGISTER) {
+			if (messageData.size() != 3) {
+				responses.push_back("999");
+			}
+			else if (messageData[1] == "" || messageData[2] == "") {
+				responses.push_back("999");
+			}
+			else {
+				string response = registerAccount(messageData[1], messageData[2], currentClient);
+				responses.push_back(response);
+			}
 		}
-		// if message does not match any type above => undefine message
+		// LOGOUT
+		else if (messageData[0] == sendMessage.LOGOUT) {
+			string response = logoutAccount(currentClient);
+			responses.push_back(response);
+		}
 		else {
-			currentClient->responses.push_back("99");
+			responses.push_back("999");
 		}
 	}
 
-	return currentClient->responses;
+	return responses;
+}
+
+
+string loginAccount(string username, string password, client* client) {
+	// Check the account is exist or not, locked or not
+	if (username == "") {
+		return responseCode.invalidMessage;
+	}
+	// Check user is logged in or not
+	if (client->username != "") {
+		return responseCode.errorAlreadyLoggedIn;
+	}
+
+	getAccountData();
+
+	for (int i = 0; i < accountList.size(); i++) {
+		if (accountList[i].username == username && accountList[i].password == password) {
+			client->username = username;
+			return responseCode.successLogin;
+		}
+	}
+	return responseCode.errorInvalidAccount;
+}
+
+
+string registerAccount(string username, string password, client* client) {
+	// Check the account is exist or not, locked or not
+	if (username == "") {
+		return responseCode.invalidMessage;
+	}
+	// Check user is logged in or not
+	if (client->username != "") {
+		return responseCode.errorAlreadyLoggedIn;
+	}
+
+	getAccountData();
+
+	for (int i = 0; i < accountList.size(); i++) {
+		if (accountList[i].username == username && accountList[i].password == password) {
+			return responseCode.errorExistedUsername;
+		}
+	}
+	Account newAccount(username, password);
+	accountList.push_back(newAccount);
+	json accountJsonObj = to_json_array_account(accountList);
+	to_json_file(accountJsonObj, accountStore);
+	return responseCode.successRegister;
+}
+
+
+string logoutAccount(client* client) {
+	if (client->username == "") {
+		return responseCode.errorUnauthorize;
+	}
+
+	client->username = "";
+	return responseCode.successLogout;
+
 }

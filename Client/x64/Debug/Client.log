@@ -1,0 +1,6 @@
+﻿  stdafx.cpp
+  Client.cpp
+c:\users\nghuu\onedrive\desktop\new folder\where-will-we-go\client\client.cpp(60): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
+  Client.vcxproj -> C:\Users\nghuu\OneDrive\Desktop\New folder\where-will-we-go\x64\Debug\Client.exe
+  Client.vcxproj -> C:\Users\nghuu\OneDrive\Desktop\New folder\where-will-we-go\x64\Debug\Client.pdb (Full PDB)

@@ -1,3 +1,6 @@
+#ifdef DELETE
+#undef DELETE
+#endif
 
 const struct ResponseCode {
 	char* successRegister = "100";
@@ -14,4 +17,21 @@ const struct ResponseCode {
 	char* successDelete = "160";
 	char* successShare = "170";
 	char* invalidMessage = "999";
+};
+
+const struct Message {
+	char* REGISTER = "REGISTER";
+	char* LOGIN = "LOGIN";
+	char* LOGOUT = "LOGOUT";
+	char* GET = "GET";
+	char* GETFAVOURITE = "GETFAVOURITE";
+	char* SAVE = "SAVE";
+	char* ADD = "ADD";
+	char* DELETE = "DELETE";
+	char* SHARE = "SHARE";
+	char* GETSHARELIST = "GETSHARELIST";
+	char* ACCEPT = "ACCEPT";
+	char* REJECT = "REJECT";
+	char* BACKUP = "BACKUP";
+	char* RESTORE = "RESTORE";
 };

@@ -1,17 +1,35 @@
 [
     {
-        "quocpc": ["gyug56789", "guiy7i", "giuy7i5kh"]
+        "favLocationIdList": [
+            "gyug56789",
+            "guiy7i",
+            "giuy7i5kh",
+            "newplace"
+        ],
+        "username": "quocpc"
     },
     {
-        "quocpc1": ["gyug56789", "guiy7i", "giuy7i5kh"]
+        "favLocationIdList": [
+            "gyug56789",
+            "guiy7i",
+            "giuy7i5kh"
+        ],
+        "username": "quocpc1"
     },
     {
-        "quocpc2": ["gyug56789", "guiy7i", "giuy7i5kh"]
+        "favLocationIdList": [
+            "gyug56789",
+            "guiy7i",
+            "giuy7i5kh"
+        ],
+        "username": "quocpc2"
     },
     {
-        "quocpc3": ["gyug56789", "guiy7i", "giuy7i5kh"]
-    },
-    {
-        "quocpc4": ["gyug56789", "guiy7i", "giuy7i5kh"]
+        "favLocationIdList": [
+            "gyug56789",
+            "guiy7i",
+            "giuy7i5kh"
+        ],
+        "username": "quocpc3"
     }
 ]

@@ -36,11 +36,6 @@ unsigned __stdcall userThread(void *param) {
 	char buff[BUFF_SIZE];
 	int ret;
 	SOCKET connectedSocket = (SOCKET)param;
-	for(int i=0; sock[i] != INVALID_SOCKET, i++) {
-
-	}
-
-
 	while (1) {
 		ret = recv(connectedSocket, buff, BUFF_SIZE, 0);
 		if (ret == SOCKET_ERROR) {
@@ -52,6 +47,11 @@ unsigned __stdcall userThread(void *param) {
 			buff[ret] = '\0';
 
 			// Send response to client
+			printf("recv: %s\n", buff);
+			char input[BUFF_SIZE];
+			printf("tra ve: ");
+			gets_s(input);
+			strcpy(buff, "110");
 			ret = send(connectedSocket, buff, strlen(buff), 0);
 			if (ret == SOCKET_ERROR) {
 				printf("Error %d: Cannot send data to client[%s:%d]\n", WSAGetLastError(), clientIP, clientPort);
@@ -98,54 +98,54 @@ int main(int argc, char* argv[])
 
 	printf("Server started!\n");
 	
-	// Demo ghi ra file json
-	vector<Account> accounts;
-	for (int i = 0; i < 5; i++)
-	{
-		Account a("user" + to_string(i), "123456");
-		accounts.push_back(a);
-	}
+	//// Demo ghi ra file json
+	//vector<Account> accounts;
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	Account a("user" + to_string(i), "123456");
+	//	accounts.push_back(a);
+	//}
 
-	json accountJsonObj = to_json_array_account(accounts);
-	to_json_file(accountJsonObj, accountStore);
+	//json accountJsonObj = to_json_array_account(accounts);
+	//to_json_file(accountJsonObj, accountStore);
 
-	// Demo đọc từ file json
-	vector<Account> accounts2 = get_all_accounts_from_json(accountStore);
-	for (auto a : accounts2) {
-		cout << a.username << ", " << a.password << endl;
-	}
+	//// Demo đọc từ file json
+	//vector<Account> accounts2 = get_all_accounts_from_json(accountStore);
+	//for (auto a : accounts2) {
+	//	cout << a.username << ", " << a.password << endl;
+	//}
 
-	/*auto ids = get_favourite_location_id("favourites.json", "quocpc");
-	auto tmp = get_all_favourite_locations_from_json("favourites.json");*/
+	///*auto ids = get_favourite_location_id("favourites.json", "quocpc");
+	//auto tmp = get_all_favourite_locations_from_json("favourites.json");*/
 
-	// Demo thêm địa điểm yêu thích
-	vector<string> tmp;
-	tmp.push_back("newplace");
-	save_location("favourites.json", "quocpc", tmp);
+	//// Demo thêm địa điểm yêu thích
+	//vector<string> tmp;
+	//tmp.push_back("newplace");
+	//save_location("favourites.json", "quocpc", tmp);
 
-	// Demo share
-	vector<Location> location = get_all_locations_from_json(locationStore);
-	string id, user_name;
-	string sendtoclient;
-	bool check_acc = false;
-	for (auto a : accounts2) {
-		if (a.username == user_name) {
-			check_acc = true;
-			for (auto l : location) {
-				if (l.id == id) {
-					sendtoclient = id;
-					//gui den client cua user_name
-					send();
-				}
-			}
-		}
-	}
-	if (check_acc == false) {
-		sendtoclient = responseCode.notFoundUsername;   //Khong tim thay user_name
-		send();
-	}
+	//// Demo share
+	//vector<Location> location = get_all_locations_from_json(locationStore);
+	//string id, user_name;
+	//string sendtoclient;
+	//bool check_acc = false;
+	//for (auto a : accounts2) {
+	//	if (a.username == user_name) {
+	//		check_acc = true;
+	//		for (auto l : location) {
+	//			if (l.id == id) {
+	//				sendtoclient = id;
+	//				//gui den client cua user_name
+	//				send();
+	//			}
+	//		}
+	//	}
+	//}
+	//if (check_acc == false) {
+	//	sendtoclient = responseCode.notFoundUsername;   //Khong tim thay user_name
+	//	send();
+	//}
 
-	//Demo add
+	////Demo add
 
 
 	//Communicate with client

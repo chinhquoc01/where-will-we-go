@@ -20,6 +20,7 @@ const struct ResponseCode {
 	char* errorNotExistType = "152";
 	char* successDelete = "160";
 	char* successShare = "170";
+	char* notFoundUsername = "171";
 	char* successLogout = "270";
 	char* invalidMessage = "999";
 	char* errorUnauthorize = "998";

@@ -3,6 +3,11 @@
 using namespace std;
 using json = nlohmann::json;
 
+#define LOCATIONS_PATH "locations.json"
+#define ACCOUNTS_PATH "accounts.json"
+#define SHARED_LOCATIONS_PATH "sharedLocations.json"
+#define FAVOURITE_LOCATIONS_PATH "favouriteLocations.json"
+
 //class BaseClass {
 //public:
 //	virtual json to_json_obj();

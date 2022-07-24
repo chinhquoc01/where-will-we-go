@@ -1,0 +1,41 @@
+[
+    {
+        "receiver": "receiver0",
+        "sender": "sender0",
+        "sharedList": [
+            "fkjla",
+            "jfakl",
+            "r9832"
+        ]
+    },
+    {
+        "receiver": "receiver1",
+        "sender": "sender1",
+        "sharedList": []
+    },
+    {
+        "receiver": "receiver2",
+        "sender": "sender2",
+        "sharedList": [
+            "fkjla"
+        ]
+    },
+    {
+        "receiver": "receiver3",
+        "sender": "sender3",
+        "sharedList": [
+            "fkjla",
+            "jfakl",
+            "r9832"
+        ]
+    },
+    {
+        "receiver": "receiver4",
+        "sender": "sender4",
+        "sharedList": [
+            "fkjla",
+            "jfakl",
+            "r9832"
+        ]
+    }
+]

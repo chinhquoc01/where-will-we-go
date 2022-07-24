@@ -7,8 +7,10 @@ vector<Location> get_favourite_list(string path, string username) {
 	return favLocations;
 }
 
-
-bool save_location(string path, string username, vector<string> locationIds) {
+/*
+Người dùng tự thêm địa điểm vào danh sách yêu thích
+*/
+bool add_to_favourite(string path, string username, string locationId, string sender) {
 	// Lấy vector favourite location từ file favourite
 	auto favouriteLocations = get_all_favourite_locations_from_json(path);
 
@@ -18,14 +20,14 @@ bool save_location(string path, string username, vector<string> locationIds) {
 		if (favLocation.username == username) {
 			found = true;
 			if (favLocation.favLocationIdList.empty()) {
-				favLocation.favLocationIdList = locationIds;
+				vector<string> favList{ locationId };
+				favLocation.favLocationIdList = favList;
 			}
 			else {
-				for (auto id : locationIds) {
-					// Nếu chưa có trong danh sách yêu thích thì mới thêm
-					if (find(favLocation.favLocationIdList.begin(), favLocation.favLocationIdList.end(), id) == favLocation.favLocationIdList.end()) {
-						favLocation.favLocationIdList.push_back(id);
-					}
+				// Nếu chưa có trong danh sách yêu thích thì mới thêm
+				if (find(favLocation.favLocationIdList.begin(), favLocation.favLocationIdList.end(), locationId) == favLocation.favLocationIdList.end()) {
+					favLocation.favLocationIdList.push_back(locationId);
+					favLocation.senderList.push_back(sender);
 				}
 
 			}
@@ -36,8 +38,12 @@ bool save_location(string path, string username, vector<string> locationIds) {
 	// username chưa có trong file favourite
 	if (!found) {
 		FavouriteLocation newFavLocation;
+		vector<string> newFavList{ locationId };
+		vector<string> newSenderList{sender};
 		newFavLocation.username = username;
-		newFavLocation.favLocationIdList = locationIds;
+		newFavLocation.favLocationIdList = newFavList;
+		newFavLocation.senderList = newSenderList;
+
 		favouriteLocations.push_back(newFavLocation);
 	}
 

@@ -4,6 +4,7 @@ json FavouriteLocation::to_json_obj() {
 	auto jsonObj = json::object();
 	jsonObj["username"] = username;
 	jsonObj["favLocationIdList"] = favLocationIdList;
+	jsonObj["senderList"] = senderList;
 	return jsonObj;
 }
 
@@ -24,18 +25,31 @@ vector<FavouriteLocation> get_all_favourite_locations_from_json(string path) {
 		json jsonObj(*it);
 		auto favIdList = json::array();
 		favIdList = jsonObj["favLocationIdList"];
-		vector<string> tmp;
+		vector<string> tmpFav;
 		for (auto e = favIdList.begin(); e != favIdList.end(); e++) {
 			json locationId(*e);
 			string s = to_string(locationId);
 			s.erase(remove(s.begin(), s.end(), '\"'), s.end());
-			tmp.push_back(s);
+			tmpFav.push_back(s);
 		}
+
+		auto senderList = json::array();
+		senderList = jsonObj["senderList"];
+		vector<string> tmpSender;
+		for (auto e = senderList.begin(); e != senderList.end(); e++) {
+			json sender(*e);
+			string s = to_string(sender);
+			s.erase(remove(s.begin(), s.end(), '\"'), s.end());
+			tmpSender.push_back(s);
+		}
+
 		FavouriteLocation favLocation;
 		string username = jsonObj["username"];
 		username.erase(remove(username.begin(), username.end(), '\"'), username.end());
 		favLocation.username = username;
-		favLocation.favLocationIdList = tmp;
+		favLocation.favLocationIdList = tmpFav;
+		favLocation.senderList = tmpSender;
+
 		res.push_back(favLocation);
 	}
 	return res;

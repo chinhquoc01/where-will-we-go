@@ -148,7 +148,6 @@
   <ItemGroup>
     <ClInclude Include="Account.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="Enum.h" />
     <ClInclude Include="FavouriteLocation.h" />
     <ClInclude Include="FavouriteLocationService.h" />
     <ClInclude Include="Location.h" />

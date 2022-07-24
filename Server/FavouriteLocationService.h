@@ -3,4 +3,4 @@
 
 vector<Location> get_favourite_list(string path, string username);
 
-bool save_location(string path, string username, vector<string> locationIds);
+bool add_to_favourite(string path, string username, string locationId, string sender = "");

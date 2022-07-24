@@ -4,6 +4,7 @@ class FavouriteLocation {
 public:
 	string username;
 	vector<string> favLocationIdList;
+	vector<string> senderList;
 	json to_json_obj();
 };
 

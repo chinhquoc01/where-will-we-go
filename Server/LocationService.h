@@ -1,4 +1,3 @@
-#pragma once
 #include "Location.h"
 
 vector<Location> get_all_location(string path);

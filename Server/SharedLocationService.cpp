@@ -1,5 +1,6 @@
 ﻿#include "SharedLocation.h"
 #include "LocationService.h"
+#include "FavouriteLocationService.h"
 
 /*
 Get all shared location from file
@@ -80,5 +81,50 @@ bool save_shared_location(string path, string sender, string receiver, vector<st
 
 	to_json_file(jsonArray, path);
 
+	return true;
+}
+
+bool accept_shared_location(string path, string username, string locationId) {
+	auto allSharedLocation = get_all_shared_location(path);
+	string sender;
+	bool accept = false;
+	// Xoá từ kho shared
+	for (auto & shared : allSharedLocation) {
+		auto found = find(shared.sharedList.begin(), shared.sharedList.end(), locationId);
+		if (shared.receiver == username && found != shared.sharedList.end()) {
+			accept = true;
+			shared.sharedList.erase(found);
+			if (sender.empty()) {
+				sender = shared.sender;
+			}
+		}
+	}
+	json sharedArrayJson = to_json_array_shared_location(allSharedLocation);
+	to_json_file(sharedArrayJson, path);
+
+	if (accept) {
+		// Thêm vào favourite
+		add_to_favourite("favourites.json", username, locationId, sender);
+	}
+
+	return true;
+}
+
+bool reject_shared_location(string path, string username, string locationId) {
+	auto allSharedLocation = get_all_shared_location(path);
+	string sender;
+
+	// Xoá từ kho shared
+	for (auto & shared : allSharedLocation) {
+		auto found = find(shared.sharedList.begin(), shared.sharedList.end(), locationId);
+		if (shared.receiver == username && found != shared.sharedList.end()) {
+			shared.sharedList.erase(found);
+			if (sender.empty()) {
+				sender = shared.sender;
+			}
+		}
+	}
+	json sharedArrayJson = to_json_array_shared_location(allSharedLocation);
+	to_json_file(sharedArrayJson, "sharedLocations.json");
 	return true;
 }

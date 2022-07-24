@@ -12,6 +12,7 @@
 #include "Common.h"
 #include "Account.h"
 #include "LocationService.h"
+#include "SharedLocationService.h"
 #include "../Shared/Enum.h"
 
 #pragma comment (lib,"ws2_32.lib")
@@ -118,24 +119,41 @@ int main(int argc, char* argv[])
 
 	printf("Server started!\n");
 	
-	/*
+	
 	// Demo ghi ra file json
-	vector<Account> accounts;
-	for (int i = 0; i < 5; i++)
-	{
-		Account a("user" + to_string(i), "123456");
-		accounts.push_back(a);
-	}
+	//vector<Account> accounts;
+	//for (int i = 0; i < 5; i++)
+	//{
+	//	Account a("user" + to_string(i), "123456");
+	//	accounts.push_back(a);
+	//}
 
-	json accountJsonObj = to_json_array_account(accounts);
-	to_json_file(accountJsonObj, accountStore);
+	//json accountJsonObj = to_json_array_account(accounts);
+	//auto stringify = accountJsonObj.dump();
+	//json second = json::parse(stringify);
 
-	// Demo đọc từ file json
-	vector<Account> accounts2 = get_all_accounts_from_json(accountStore);
-	for (auto a : accounts2) {
-		cout << a.username << ", " << a.password << endl;
+	//to_json_file(accountJsonObj, accountStore);
+
+	//// Demo đọc từ file json
+	//vector<Account> accounts2 = get_all_accounts_from_json(accountStore);
+	//for (auto a : accounts2) {
+	//	cout << a.username << ", " << a.password << endl;
+	//}
+
+	/*vector<SharedLocation> sharedLocations;
+	for (int i = 0; i < 5; i++) {
+		SharedLocation shared;
+		shared.sender = "sender" + to_string(i);
+		shared.receiver = "receiver" + to_string(i);
+		vector<string> sharedList{"fkjla", "jfakl", "r9832"};
+		shared.sharedList = sharedList;
+		sharedLocations.push_back(shared);
 	}
-	*/
+	json sharedObj = to_json_array_shared_location(sharedLocations);
+	to_json_file(sharedObj, "sharedLocations.json");*/
+
+	//reject_shared_location("sharedLocations.json", "receiver1", "r9832");
+	accept_shared_location("sharedLocations.json", "receiver2", "jfakl");
 
 
 	/*auto ids = get_favourite_location_id("favourites.json", "quocpc");
@@ -147,6 +165,7 @@ int main(int argc, char* argv[])
 	tmp.push_back("newplace");
 	save_location("favourites.json", "quocpc", tmp);
 	*/
+
 
 	//Communicate with client
 	sockaddr_in clientAddr;

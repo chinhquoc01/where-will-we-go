@@ -1,12 +1,11 @@
 #include "Common.h"
-
+#pragma once
 
 class Location {
 public:
 	string id;
 	string name;
 	int type;
-	string address;
 	string description;
 	string address;
 	Location();

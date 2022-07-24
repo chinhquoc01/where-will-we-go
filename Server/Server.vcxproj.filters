@@ -42,9 +42,6 @@
     <ClInclude Include="Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Enum.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LocationService.h">
       <Filter>Header Files\Service</Filter>
     </ClInclude>

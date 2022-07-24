@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Service">
+      <UniqueIdentifier>{a09f32aa-25da-482e-a693-e8397460d0e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Service">
+      <UniqueIdentifier>{d8e83e2c-2fe9-41f2-842e-e51d06ddacc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -40,7 +46,19 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LocationService.h">
+      <Filter>Header Files\Service</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedLocation.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedLocationService.h">
+      <Filter>Header Files\Service</Filter>
+    </ClInclude>
+    <ClInclude Include="FavouriteLocation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FavouriteLocationService.h">
+      <Filter>Header Files\Service</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -60,7 +78,19 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LocationService.cpp">
+      <Filter>Source Files\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedLocation.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedLocationService.cpp">
+      <Filter>Source Files\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="FavouriteLocation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FavouriteLocationService.cpp">
+      <Filter>Source Files\Service</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

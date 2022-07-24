@@ -8,11 +8,18 @@
 #include <Winsock2.h>
 #include <WS2tcpip.h>
 #include <string>
-
+#include "vector"
 #include "../Shared/Enum.h"
-#define SERVER_PORT 5500 
-#define SERVER_ADDR "127.0.0.1" 
-#define BUFF_SIZE 2048 
+#include "../Server/Account.h"
+#include "../Server/Common.h"
+#include "../Server/Location.h"
+#include <iostream>
+#include <fstream>
+#include "conio.h"
+
+#define SERVER_PORT 5500
+#define SERVER_ADDR "127.0.0.1"
+#define BUFF_SIZE 2048
 #define SELECT_SIZE 128
 #define SEPARATOR_CHAR "$"
 #define END_MESS "\r\n"
@@ -26,20 +33,99 @@ char select_function[SELECT_SIZE];
 const ResponseCode responseCode;
 const Message message;
 
+vector<Location> locationList;
 
-//input username ,password
-void input() {
+/*
+* @function split: split string by delim character
+*
+* @param string: string want to split
+*
+* @param delim: character to split
+*
+* @return: array string after split
+*/
+vector<string> split(const string &s, char delim) {
+	vector<string> result;
+	stringstream ss(s);
+	string item;
+
+	while (getline(ss, item, delim)) {
+		result.push_back(item);
+	}
+
+	return result;
+}
+
+void recvLocationData(SOCKET client) {
+
+	int ret;
+
+	ret = recv(client, buff, BUFF_SIZE, 0);
+	if (ret == SOCKET_ERROR) {
+		if (WSAGetLastError() == WSAETIMEDOUT)
+			printf("Time-out!");
+		else printf("Error %d: Cannot receive data.", WSAGetLastError());
+	}
+	else if (strlen(buff) > 0) {
+		buff[ret] = 0;
+		printf("Receive from server: %s\n", buff);
+	}
+	string responseCodeGetLocation(buff);
+	if (responseCodeGetLocation == responseCode.successGetLocation) {
+		ret = recv(client, buff, BUFF_SIZE, 0);
+		if (ret == SOCKET_ERROR) {
+			if (WSAGetLastError() == WSAETIMEDOUT)
+				printf("Time-out!");
+			else printf("Error %d: Cannot receive data.", WSAGetLastError());
+		}
+		else if (strlen(buff) > 0) {
+			buff[ret] = 0;
+			printf("Receive from server: %s\n", buff);
+		}
+
+		string strLength(buff);
+		int length = stoi(strLength);
+		for (int i = 0; i < length; i++) {
+
+			ret = recv(client, buff, BUFF_SIZE, 0);
+			if (ret == SOCKET_ERROR) {
+				if (WSAGetLastError() == WSAETIMEDOUT)
+					printf("Time-out!");
+				else printf("Error %d: Cannot receive data.", WSAGetLastError());
+			}
+			else if (strlen(buff) > 0) {
+				buff[ret] = 0;
+				string response(buff);
+				cout << response << endl;
+				vector<string> messageData = split(response, '$');
+				if (messageData.size() < 5) {
+					printf("Error when get list location.");
+					break;
+				}
+				printf("Receive from server: %s\n", buff);
+			}
+		}
+
+		getch();
+	}
+}
+
+// input username ,password
+void input()
+{
 	char temp[BUFF_SIZE];
 
 	system("cls");
 
-	if (strcmp(select_function, "1") == 0) {
+	if (strcmp(select_function, "1") == 0)
+	{
 		strcpy(buff, message.REGISTER);
 		strcat(buff, SEPARATOR_CHAR);
 		printf("REGISTER\n");
 	}
 
-	else if (strcmp(select_function, "2") == 0) {
+	else if (strcmp(select_function, "2") == 0)
+	{
 		strcpy(buff, message.LOGIN);
 		strcat(buff, SEPARATOR_CHAR);
 		printf("LOGIN\n");
@@ -58,8 +144,9 @@ void input() {
 	strcat(buff, END_MESS);
 }
 
-//Giao dien dang ky dang nhap
-void register_login(SOCKET client) {
+// Giao dien dang ky dang nhap
+void register_login(SOCKET client)
+{
 	system("cls");
 
 	printf("---------------------------------------------\n");
@@ -80,27 +167,32 @@ void register_login(SOCKET client) {
 	fflush(stdin);
 	gets_s(select_function, SELECT_SIZE);
 
-	if (strcmp(select_function, "1") == 0 || strcmp(select_function, "2") == 0) {
+	if (strcmp(select_function, "1") == 0 || strcmp(select_function, "2") == 0)
+	{
 		input();
-		//gui username, password
+		// gui username, password
 		send(client, buff, strlen(buff), 0);
 	}
 
-	else if (strcmp(select_function, "3") == 0) {
-		
+	else if (strcmp(select_function, "3") == 0)
+	{
 	}
-	else {
+	else
+	{
 		printf("Function doesn't exist\n");
 		strcpy(select_function, "0");
 	}
 }
 
-//Giao dien cac chuc nang
-void function(SOCKET client) {
+// Giao dien cac chuc nang
+void clientProcess(SOCKET client)
+{
 	system("cls");
 
-	while (1) {
-		if (strcmp(select_function, "7") == 0) break;
+	while (1)
+	{
+		if (strcmp(select_function, "7") == 0)
+			break;
 
 		system("cls");
 		printf("---------------------------------------------\n");
@@ -134,11 +226,14 @@ void function(SOCKET client) {
 		gets_s(select_function, SELECT_SIZE);
 
 		int key = atoi(select_function);
-		switch (key) {
-		case 1: {
+		switch (key)
+		{
+		case 1:
+		{
 			system("cls");
 
-			while (1) {
+			while (1)
+			{
 				system("cls");
 				printf("See list of location\n");
 				printf("---------------------------------------------\n");
@@ -168,7 +263,8 @@ void function(SOCKET client) {
 				printf("Enter number to select IDType: ");
 				fflush(stdin);
 				gets_s(select_function, SELECT_SIZE);
-				if (strcmp(select_function, "0") == 0) break;
+				if (strcmp(select_function, "0") == 0)
+					break;
 				strcpy(buff, message.GET);
 				strcat(buff, SEPARATOR_CHAR);
 				strcat(buff, select_function);
@@ -176,13 +272,17 @@ void function(SOCKET client) {
 
 				send(client, buff, strlen(buff), 0);
 
-				//recv
-			} break;
+				// recv
+				recvLocationData(client);
+			}
+			break;
 		}
-		case 2: {
+		case 2:
+		{
 			system("cls");
 
-			while (1) {
+			while (1)
+			{
 				system("cls");
 
 				printf("See list of favourite location\n");
@@ -213,7 +313,8 @@ void function(SOCKET client) {
 				printf("Enter number to select IDType: ");
 				fflush(stdin);
 				gets_s(select_function, SELECT_SIZE);
-				if (strcmp(select_function, "0") == 0) break;
+				if (strcmp(select_function, "0") == 0)
+					break;
 				strcpy(buff, message.GETFAVOURITE);
 				strcat(buff, SEPARATOR_CHAR);
 				strcat(buff, select_function);
@@ -221,10 +322,12 @@ void function(SOCKET client) {
 
 				send(client, buff, strlen(buff), 0);
 
-				//recv
-			} break;
+				// recv
+			}
+			break;
 		}
-		case 3: {
+		case 3:
+		{
 			system("cls");
 
 			strcpy(buff, "ADD");
@@ -256,20 +359,25 @@ void function(SOCKET client) {
 			send(client, buff, strlen(buff), 0);
 
 			recv(client, buff, BUFF_SIZE, 0);
-			if (strcmp(buff, responseCode.successAdd) == 0) {
+			if (strcmp(buff, responseCode.successAdd) == 0)
+			{
 				printf("Add new location successfull\n");
 				Sleep(1000);
 			}
-			else if (strcmp(buff, responseCode.errorInvalidInput) == 0) {
+			else if (strcmp(buff, responseCode.errorInvalidInput) == 0)
+			{
 				printf("You haven't input enough infomation!\n");
 				Sleep(1000);
 			}
-			else if (strcmp(buff, responseCode.errorNotExistType) == 0) {
+			else if (strcmp(buff, responseCode.errorNotExistType) == 0)
+			{
 				printf("IDType doesn't existed!\n");
 				Sleep(1000);
 			}
-		} break;
-		case 4: {
+		}
+		break;
+		case 4:
+		{
 			system("cls");
 
 			strcpy(buff, message.GETSHARELIST);
@@ -277,9 +385,11 @@ void function(SOCKET client) {
 
 			send(client, buff, strlen(buff), 0);
 
-			//recv
-		} break;
-		case 5: {
+			// recv
+		}
+		break;
+		case 5:
+		{
 			system("cls");
 
 			strcpy(buff, message.BACKUP);
@@ -288,12 +398,15 @@ void function(SOCKET client) {
 			send(client, buff, strlen(buff), 0);
 
 			recv(client, buff, BUFF_SIZE, 0);
-			if (strcmp(buff, responseCode.successBackup) == 0) {
+			if (strcmp(buff, responseCode.successBackup) == 0)
+			{
 				printf("Backup successfull\n");
 				Sleep(1000);
 			}
-		} break;
-		case 6: {
+		}
+		break;
+		case 6:
+		{
 			system("cls");
 
 			strcpy(buff, message.RESTORE);
@@ -302,17 +415,21 @@ void function(SOCKET client) {
 			send(client, buff, strlen(buff), 0);
 
 			recv(client, buff, BUFF_SIZE, 0);
-			if (strcmp(buff, responseCode.successRestore) == 0) {
+			if (strcmp(buff, responseCode.successRestore) == 0)
+			{
 				printf("Restore successfull\n");
 				Sleep(1000);
 			}
 
-			else if (strcmp(buff, responseCode.errorNoBackup) == 0) {
+			else if (strcmp(buff, responseCode.errorNoBackup) == 0)
+			{
 				printf("Account hasn't been backup!\n");
 				Sleep(1000);
 			}
-		} break;
-		case 7: {
+		}
+		break;
+		case 7:
+		{
 			system("cls");
 
 			strcpy(buff, message.LOGOUT);
@@ -321,121 +438,141 @@ void function(SOCKET client) {
 			send(client, buff, strlen(buff), 0);
 
 			recv(client, buff, BUFF_SIZE, 0);
-			if (strcmp(buff, responseCode.successLogout) == 0) {
+			if (strcmp(buff, responseCode.successLogout) == 0)
+			{
 				printf("Logout successfull\n");
 				Sleep(1000);
 			}
-		} break;
+		}
+		break;
 		default:
 			printf("Function doesn't exist\n");
 			Sleep(1000);
 		}
-	}	
+	}
 }
 
 
-int main(int ardc, char* argv[])
+int main(int ardc, char *argv[])
 {
-	//Inittiate WinSock
+	// Inittiate WinSock
 	WSADATA wsaData;
 	WORD wVersion = MAKEWORD(2, 2);
-	if (WSAStartup(wVersion, &wsaData)) {
+	if (WSAStartup(wVersion, &wsaData))
+	{
 		printf("Winsock 2.2. is not supported\n");
 		return 0;
 	}
 
-	//Construct socket
+	// Construct socket
 	SOCKET client;
 	client = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (client == INVALID_SOCKET) {
+	if (client == INVALID_SOCKET)
+	{
 		printf("Error %d: Cannot create client socket.", WSAGetLastError());
 		return 0;
 	}
 
-	//Specify server address
+	// Specify server address
 	sockaddr_in serverAddr;
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(SERVER_PORT);
 	inet_pton(AF_INET, SERVER_ADDR, &serverAddr.sin_addr);
 
-	//Request to connect server
-	if (connect(client, (sockaddr *)&serverAddr, sizeof(serverAddr))) {
+	// Request to connect server
+	if (connect(client, (sockaddr *)&serverAddr, sizeof(serverAddr)))
+	{
 		printf("Error %d: Cannot connect server.", WSAGetLastError());
 		return 0;
 	}
 
 	printf("Connected server!\n");
 
-	//Comunicate with server
+	// Comunicate with server
 
 	int ret, messageLen;
-	while (1) {
+	while (1)
+	{
 		register_login(client);
-		if (strcmp(select_function, "3") == 0) break;
-		else if (strcmp(select_function, "0") == 0) {
+		if (strcmp(select_function, "3") == 0)
+			break;
+		else if (strcmp(select_function, "0") == 0)
+		{
 			system("cls");
 			continue;
 		}
-		else {
-			//nhan thong diep
+		else
+		{
+			// nhan thong diep
 			char rcvbuff[BUFF_SIZE];
 			ret = recv(client, buff, BUFF_SIZE, 0);
 			buff[ret] = 0;
 
-			if (strcmp(buff, responseCode.successRegister) == 0) {
-				printf("Register successfull!\n"); 
-				Sleep(1000); continue;
+			if (strcmp(buff, responseCode.successRegister) == 0)
+			{
+				printf("Register successfull!\n");
+				Sleep(1000);
+				continue;
 			}
-			else if (strcmp(buff, responseCode.errorExistedUsername)  == 0) {
-				printf("Username doesn't existed!\n"); 
-				Sleep(1000); continue;
+			else if (strcmp(buff, responseCode.errorExistedUsername) == 0)
+			{
+				printf("Username doesn't existed!\n");
+				Sleep(1000);
+				continue;
 			}
-			else if (strcmp(buff, responseCode.invalidMessage) == 0) {
+			else if (strcmp(buff, responseCode.invalidMessage) == 0)
+			{
 				printf("Message isn't determined!\n");
-				Sleep(1000); continue;
+				Sleep(1000);
+				continue;
 			}
-			else if (strcmp(buff, responseCode.successLogin) == 0) {
+			else if (strcmp(buff, responseCode.successLogin) == 0)
+			{
 				printf("Login successfull!\n");
 				Sleep(1000);
-				function(client); continue;
+				clientProcess(client);
+				continue;
 			}
-			else {
-				printf("Username or password is wrong!\n"); 
-				Sleep(1000); continue;
+			else
+			{
+				printf("Username or password is wrong!\n");
+				Sleep(1000);
+				continue;
 			}
-
 		}
 
-	//	//Send message 
-	//	printf("Send to server: ");
-	//	gets_s(buff, BUFF_SIZE);
-	//	messageLen = strlen(buff);
-	//	if (messageLen == 0) break;
+		/*
+		//Send message
+		printf("Send to server: ");
+		gets_s(buff, BUFF_SIZE);
+		messageLen = strlen(buff);
+		if (messageLen == 0) break;
 
-	//	string message(buff);
-	//	message += "\r\n";
+		string message(buff);
+		message += "\r\n";
 
-	//	ret = send(client, message.c_str(), strlen(message.c_str()), 0);
-	//	if (ret == SOCKET_ERROR)
-	//		printf("Error %d: Cannot send data.", WSAGetLastError());
-	//	//Receive echo message 
-	//	ret = recv(client, buff, BUFF_SIZE, 0);
-	//	if (ret == SOCKET_ERROR) {
-	//		if (WSAGetLastError() == WSAETIMEDOUT)
-	//			printf("Time-out!");
-	//		else printf("Error %d: Cannot receive data.", WSAGetLastError());
-	//	}
-	//	else if (strlen(buff) > 0) {
-	//		buff[ret] = 0;
-	//		printf("Receive from server: %s\n", buff);
-	//	}
+		ret = send(client, message.c_str(), strlen(message.c_str()), 0);
+		if (ret == SOCKET_ERROR)
+			printf("Error %d: Cannot send data.", WSAGetLastError());
+		//Receive echo message
+		ret = recv(client, buff, BUFF_SIZE, 0);
+		if (ret == SOCKET_ERROR) {
+			if (WSAGetLastError() == WSAETIMEDOUT)
+				printf("Time-out!");
+			else printf("Error %d: Cannot receive data.", WSAGetLastError());
+		}
+		else if (strlen(buff) > 0) {
+			buff[ret] = 0;
+			printf("Receive from server: %s\n", buff);
+		}
+		*/
+
 	}
 
-	//Close socket 
+	// Close socket
 	closesocket(client);
 
-	//Terminate Winsock
+	// Terminate Winsock
 	WSACleanup();
 	return 0;
 }
-

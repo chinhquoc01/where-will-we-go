@@ -46,5 +46,9 @@
     {
         "password": "2314",
         "username": "hockt"
+    },
+    {
+        "password": "1234",
+        "username": "hocpc"
     }
 ]

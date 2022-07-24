@@ -14,7 +14,6 @@ const struct ResponseCode {
 	char* successGetLocation = "120";
 	char* successGetFavorite = "130";
 	char* successSave = "140";
-	char* errorSave = "141";
 	char* errorExistedLocation = "141";
 	char* successAdd = "150";
 	char* errorInvalidInput = "151";

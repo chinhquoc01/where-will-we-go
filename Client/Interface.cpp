@@ -84,10 +84,15 @@ void getLocation(vector<string> locationData, char* select_function) {
 	system("cls");
 
 	int nameSizeMax = 0, addressSizeMax = 0;
+	if (locationData.size() < 5) {
+		return;
+	}
+	else {
+		for (int i = 0; i < locationData.size(); i += 5) {
+			if (nameSizeMax < locationData[i+1].size()) nameSizeMax = locationData[i+1].size();
+			if (addressSizeMax < locationData[i+3].size()) addressSizeMax = locationData[i+3].size();
+		}
 
-	for (int i = 1; i < locationData.size(); i += 4) {
-		if (nameSizeMax < locationData[i].size()) nameSizeMax = locationData[i].size();
-		if (addressSizeMax < locationData[i + 2].size()) addressSizeMax = locationData[i + 2].size();
 	}
 	if (strcmp(select_function, "*") == 0) cout << "List of all location" << endl;
 	else {
@@ -100,12 +105,12 @@ void getLocation(vector<string> locationData, char* select_function) {
 		}
 	}
 	
-	
+	printf("(IDtype) Restaurant : 1, Coffee: 2, Cinema: 3, Fashion shop: 4\n");
 	cout << "NUMBER      ID       Name";
 	for (int i = 0; i < nameSizeMax; i++) printf(" ");
-	cout << "IDTpye";
+	cout << "IDType";
 	for (int i = 0; i < 4; i++) printf(" ");
-	cout << "Adress";
+	cout << "Address";
 	for (int i = 0; i < (addressSizeMax - 2); i++) printf(" ");
 	cout << "Description" << endl;
 	int count = 1;
@@ -128,14 +133,14 @@ void getLocation(vector<string> locationData, char* select_function) {
 		cout << " " + locationData[i + 1];
 		i++;
 		//printf description
-		cout << "    " + locationData[i - 1] << endl;
+		cout << "     " + locationData[i - 1] << endl;
 	}
 }
 
 //Select IDType interface
 void IDType(char* select_function) {
 	printf("---------------------------------------------\n");
-	printf("| IDType|             FUNCTION              |\n");
+	printf("| IDType|               TYPE                |\n");
 	printf("---------------------------------------------\n");
 	printf("|   1   | Restaurant                        |\n");
 	printf("---------------------------------------------\n");
@@ -220,10 +225,11 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 					printf("1. Enter number of location: ");
 					fflush(stdin);
 					gets_s(tmp);
+					printf("---------------------------------------\n");
 					if (strcmp(tmp, "0") == 0) continue;
-					if (isdigit(*tmp) == 0) printf("Location doesn't existed!\n");
+					else if (isdigit(*tmp) == 0) printf("Location doesn't existed!\n");
 					else {
-						if (atoi(tmp)> locationData.size()/5 && atoi(tmp) < 0) printf("Location doesn't existed!\n");
+						if (atoi(tmp)> locationData.size()/5 || atoi(tmp) < 0) printf("Location doesn't existed!\n");
 						else {
 							printf("1. Save\n");
 							printf("2. Shared\n");
@@ -232,12 +238,17 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 							fflush(stdin);
 							gets_s(tmp);
 							
+							
 							if (strcmp(tmp, "1") == 0) {
 								strcpy(buff, message.SAVE);
-
+								strcat(buff, SEPARATOR_CHAR);
+								strcat(buff, locationData[(atoi(tmp) - 1) * 5].c_str());
+								strcat(buff, END_MESS);
+								printf("---------------------------------------\n");
 								send(client, buff, strlen(buff), 0);
 
-								recv(client, buff, BUFF_SIZE, 0);
+								int ret = recv(client, buff, BUFF_SIZE, 0);
+								buff[ret] = 0;
 								getResponseCode(buff);
 							}
 							else if (strcmp(tmp, "2") == 0) {
@@ -253,7 +264,8 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 
 								send(client, buff, strlen(buff), 0);
 
-								recv(client, buff, BUFF_SIZE, 0);
+								int ret = recv(client, buff, BUFF_SIZE, 0);
+								buff[ret] = 0;
 								getResponseCode(buff);
 
 							}
@@ -295,6 +307,9 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 					send(client, buff, strlen(buff), 0);
 
 					//recv
+					vector<string> locationData = recvLocationData(client, buff);
+					getLocation(locationData, select_function);
+					
 				} break;
 			}
 			case 3: {
@@ -306,19 +321,23 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 				printf("Add new location\n");
 				printf("(IDtype) Restaurant : 1, Coffee: 2, Cinema: 3, Fashion shop: 4\n");
 				printf("Name: ");
+
 				fflush(stdin);
 				gets_s(inp);
 				strcat(buff, inp);
+				strcat(buff, SEPARATOR_CHAR);
 
 				printf("IDType: ");
 				fflush(stdin);
 				gets_s(inp);
 				strcat(buff, inp);
+				strcat(buff, SEPARATOR_CHAR);
 
 				printf("Address: ");
 				fflush(stdin);
 				gets_s(inp);
 				strcat(buff, inp);
+				strcat(buff, SEPARATOR_CHAR);
 
 				printf("Description: ");
 				fflush(stdin);
@@ -327,8 +346,12 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 				strcat(buff, END_MESS);
 
 				send(client, buff, strlen(buff), 0);
+				cout << string(buff) << endl;
 
-				recv(client, buff, BUFF_SIZE, 0);
+				int ret = recv(client, buff, BUFF_SIZE, 0);
+				buff[ret] = 0;
+				cout << string(buff) << endl;
+
 				getResponseCode(buff);
 				Sleep(1000);
 			} break;
@@ -349,10 +372,13 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 				strcat(buff, END_MESS);
 
 				send(client, buff, strlen(buff), 0);
+				cout << string(buff) << endl;
 
-				recv(client, buff, BUFF_SIZE, 0);
+				int ret = recv(client, buff, BUFF_SIZE, 0);
+				buff[ret] = 0;
+				cout << string(buff) << endl;
 				getResponseCode(buff);
-				Sleep(1000);
+				Sleep(10000);
 			} break;
 			case 6: {
 				system("cls");
@@ -362,7 +388,8 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 
 				send(client, buff, strlen(buff), 0);
 
-				recv(client, buff, BUFF_SIZE, 0);
+				int ret = recv(client, buff, BUFF_SIZE, 0);
+				buff[ret] = 0;
 
 				getResponseCode(buff);
 				Sleep(1000);
@@ -375,7 +402,9 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 
 				send(client, buff, strlen(buff), 0);
 
-				recv(client, buff, BUFF_SIZE, 0);
+				int ret = recv(client, buff, BUFF_SIZE, 0);
+				buff[ret] = 0;
+
 				getResponseCode(buff);
 				Sleep(1000);
 			} break;

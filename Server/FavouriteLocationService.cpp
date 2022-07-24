@@ -2,7 +2,7 @@
 
 vector<Location> get_favourite_list(string username, string type) {
 	auto favLocationIds = get_favourite_location_id(FavouriteLocation::get_file_path(), username);
-	auto locations = get_all_locations_from_json(FavouriteLocation::get_file_path());
+	auto locations = get_all_locations_from_json(Location::get_file_path());
 	auto favLocations = get_location_from_id_list(locations, favLocationIds);
 	if (type == "*")
 		return favLocations;

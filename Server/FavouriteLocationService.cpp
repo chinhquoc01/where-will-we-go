@@ -1,8 +1,8 @@
 ﻿#include "FavouriteLocationService.h"
 
-vector<Location> get_favourite_list(string path, string username) {
-	auto favLocationIds = get_favourite_location_id(path, username);
-	auto locations = get_all_locations_from_json(path);
+vector<Location> get_favourite_list(string username) {
+	auto favLocationIds = get_favourite_location_id(FavouriteLocation::get_file_path(), username);
+	auto locations = get_all_locations_from_json(FavouriteLocation::get_file_path());
 	auto favLocations = get_location_from_id_list(locations, favLocationIds);
 	return favLocations;
 }
@@ -10,9 +10,9 @@ vector<Location> get_favourite_list(string path, string username) {
 /*
 Người dùng tự thêm địa điểm vào danh sách yêu thích
 */
-bool add_to_favourite(string path, string username, string locationId, string sender) {
+bool add_to_favourite(string username, string locationId, string sender) {
 	// Lấy vector favourite location từ file favourite
-	auto favouriteLocations = get_all_favourite_locations_from_json(path);
+	auto favouriteLocations = get_all_favourite_locations_from_json(FavouriteLocation::get_file_path());
 
 	bool found = false;
 	for (auto & favLocation : favouriteLocations) {
@@ -49,7 +49,7 @@ bool add_to_favourite(string path, string username, string locationId, string se
 
 	auto jsonArray = to_json_array_favourite_location(favouriteLocations);
 
-	to_json_file(jsonArray, path);
+	to_json_file(jsonArray, FavouriteLocation::get_file_path());
 
 	return true;
 }

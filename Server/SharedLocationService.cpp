@@ -7,13 +7,13 @@ Get all shared location from file
 @params path: path to file
 @return vector<SharedLocation>
 */
-vector<SharedLocation> get_all_shared_location(string path) {
-	auto sharedLocations = get_all_shared_locations_from_json(path);
+vector<SharedLocation> get_all_shared_location() {
+	auto sharedLocations = get_all_shared_locations_from_json(SharedLocation::get_file_path());
 	return sharedLocations;
 }
 
-map<string, vector<string>> get_shared_location_by_username(string path, string username, string locationType) {
-	auto sharedLocations = get_all_shared_locations_from_json(path);
+map<string, vector<string>> get_shared_location_by_username(string username, string locationType) {
+	auto sharedLocations = get_all_shared_locations_from_json(SharedLocation::get_file_path());
 	map<string, vector<string>> mapShared;
 	for (auto sharedLocation : sharedLocations) {
 		if (sharedLocation.receiver == username) {
@@ -44,9 +44,9 @@ map<string, vector<string>> get_shared_location_by_username(string path, string 
 	return res;
 }
 
-bool save_shared_location(string path, string sender, string receiver, vector<string> locationIds) {
+bool save_shared_location(string sender, string receiver, vector<string> locationIds) {
 	// Lấy vector shared location từ file shared
-	auto sharedLocations = get_all_shared_location(path);
+	auto sharedLocations = get_all_shared_location();
 
 	bool found = false;
 	for (auto & sharedLocation : sharedLocations) {
@@ -79,13 +79,13 @@ bool save_shared_location(string path, string sender, string receiver, vector<st
 
 	auto jsonArray = to_json_array_shared_location(sharedLocations);
 
-	to_json_file(jsonArray, path);
+	to_json_file(jsonArray, SharedLocation::get_file_path());
 
 	return true;
 }
 
-bool accept_shared_location(string path, string username, string locationId) {
-	auto allSharedLocation = get_all_shared_location(path);
+bool accept_shared_location(string username, string locationId) {
+	auto allSharedLocation = get_all_shared_location();
 	string sender;
 	bool accept = false;
 	// Xoá từ kho shared
@@ -100,18 +100,18 @@ bool accept_shared_location(string path, string username, string locationId) {
 		}
 	}
 	json sharedArrayJson = to_json_array_shared_location(allSharedLocation);
-	to_json_file(sharedArrayJson, path);
+	to_json_file(sharedArrayJson, SharedLocation::get_file_path());
 
 	if (accept) {
 		// Thêm vào favourite
-		add_to_favourite("favourites.json", username, locationId, sender);
+		add_to_favourite(username, locationId, sender);
 	}
 
 	return true;
 }
 
-bool reject_shared_location(string path, string username, string locationId) {
-	auto allSharedLocation = get_all_shared_location(path);
+bool reject_shared_location(string username, string locationId) {
+	auto allSharedLocation = get_all_shared_location();
 	string sender;
 
 	// Xoá từ kho shared

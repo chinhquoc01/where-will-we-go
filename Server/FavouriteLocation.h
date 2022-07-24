@@ -6,6 +6,9 @@ public:
 	vector<string> favLocationIdList;
 	vector<string> senderList;
 	json to_json_obj();
+	static string get_file_path() {
+		return FAVOURITE_LOCATIONS_PATH;
+	}
 };
 
 json to_json_array_favourite_location(vector<FavouriteLocation> favLocations);

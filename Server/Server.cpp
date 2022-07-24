@@ -26,8 +26,6 @@ char clientIP[INET_ADDRSTRLEN];
 SOCKET sock[4048];
 SOCKET connSock;
 
-const string accountStore = "accounts.json";
-const string locationStore = "locations.json";
 
 const ResponseCode responseCode;
 const Message sendMessage;
@@ -119,53 +117,6 @@ int main(int argc, char* argv[])
 
 	printf("Server started!\n");
 	
-	
-	// Demo ghi ra file json
-	//vector<Account> accounts;
-	//for (int i = 0; i < 5; i++)
-	//{
-	//	Account a("user" + to_string(i), "123456");
-	//	accounts.push_back(a);
-	//}
-
-	//json accountJsonObj = to_json_array_account(accounts);
-	//auto stringify = accountJsonObj.dump();
-	//json second = json::parse(stringify);
-
-	//to_json_file(accountJsonObj, accountStore);
-
-	//// Demo đọc từ file json
-	//vector<Account> accounts2 = get_all_accounts_from_json(accountStore);
-	//for (auto a : accounts2) {
-	//	cout << a.username << ", " << a.password << endl;
-	//}
-
-	/*vector<SharedLocation> sharedLocations;
-	for (int i = 0; i < 5; i++) {
-		SharedLocation shared;
-		shared.sender = "sender" + to_string(i);
-		shared.receiver = "receiver" + to_string(i);
-		vector<string> sharedList{"fkjla", "jfakl", "r9832"};
-		shared.sharedList = sharedList;
-		sharedLocations.push_back(shared);
-	}
-	json sharedObj = to_json_array_shared_location(sharedLocations);
-	to_json_file(sharedObj, "sharedLocations.json");*/
-
-	//reject_shared_location("sharedLocations.json", "receiver1", "r9832");
-	accept_shared_location("sharedLocations.json", "receiver2", "jfakl");
-
-
-	/*auto ids = get_favourite_location_id("favourites.json", "quocpc");
-	auto tmp = get_all_favourite_locations_from_json("favourites.json");*/
-
-	/*
-	// Demo thêm địa điểm yêu thích
-	vector<string> tmp;
-	tmp.push_back("newplace");
-	save_location("favourites.json", "quocpc", tmp);
-	*/
-
 
 	//Communicate with client
 	sockaddr_in clientAddr;
@@ -198,7 +149,7 @@ int main(int argc, char* argv[])
 void getAccountData() {
 	// Get data account from account.json
 	accountList.clear();
-	accountList = get_all_accounts_from_json(accountStore);
+	accountList = get_all_accounts_from_json(Account::get_file_path());
 }
 
 
@@ -356,7 +307,7 @@ string registerAccount(string username, string password, client* client) {
 	Account newAccount(username, password);
 	accountList.push_back(newAccount);
 	json accountJsonObj = to_json_array_account(accountList);
-	to_json_file(accountJsonObj, accountStore);
+	to_json_file(accountJsonObj, Account::get_file_path());
 	return responseCode.successRegister;
 }
 

@@ -451,6 +451,10 @@ string loginAccount(string username, string password, client* client) {
 	for (int i = 0; i < accountList.size(); i++) {
 		if (accountList[i].username == username && accountList[i].password == password) {
 			client->username = username;
+			bool isHaveNotification = check_share_notification(client);
+			if (isHaveNotification) {
+				return responseCode.successLogin + 'x';
+			}
 			return responseCode.successLogin;
 		}
 	}

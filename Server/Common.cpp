@@ -1,5 +1,8 @@
 ﻿#include "Common.h"
 #include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 /*
 Sinh radom string
@@ -8,7 +11,10 @@ string random_string(int len)
 {
 	string str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	string newstr;
+	time_t t;
 	int pos;
+
+	srand((unsigned)time(&t));
 	while (newstr.size() != len) {
 		pos = ((rand() % (str.size() - 1)));
 		newstr += str.substr(pos, 1);

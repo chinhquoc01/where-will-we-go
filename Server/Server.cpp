@@ -462,7 +462,7 @@ string addLocation(string name, string type, string address, string description,
 	locationList.push_back(l);
 
 	json locationJsonObj = to_json_array_location(locationList);
-	to_json_file(locationJsonObj, locationStore);
+	to_json_file(locationJsonObj, Location::get_file_path());
 
 	return responseCode.successAdd;
 }

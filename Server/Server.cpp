@@ -62,6 +62,7 @@ string accept_shared_location(string idLocation, client* client);
 string reject_shared_location(string idLocation, client* client);
 string backup(client* client);
 string restore(client* client);
+bool check_share_notification(client* client);
 
 /* userThread - Thread to receive the user message from client*/
 unsigned __stdcall userThread(void *param) {

@@ -66,38 +66,52 @@ bool add_to_favourite(string username, string locationId, string sender) {
 }
 
 bool backup_favourite(string username) {
-	auto favourites = get_all_favourite_locations_from_json(FavouriteLocation::get_file_path());
-	FavouriteLocation favLocation;
-	bool check = false;
-	for (auto fav : favourites) {
-		if (fav.username == username) {
-			check = true;
-			favLocation = fav;
-			break;
+	try
+	{
+		auto favourites = get_all_favourite_locations_from_json(FavouriteLocation::get_file_path());
+		FavouriteLocation favLocation;
+		bool check = false;
+		for (auto fav : favourites) {
+			if (fav.username == username) {
+				check = true;
+				favLocation = fav;
+				break;
+			}
 		}
-	}
-	if (!check) return false;
+		if (!check) return false;
 
-	json jsonObj = favLocation.to_json_obj();
-	string backupFile = username + "_backup.json";
-	to_json_file(jsonObj, backupFile);
-	return true;
+		json jsonObj = favLocation.to_json_obj();
+		string backupFile = username + "_backup.json";
+		to_json_file(jsonObj, backupFile);
+		return true;
+	}
+	catch (const std::exception&)
+	{
+		return false;
+	}
 }
 
 bool restore_favourite(string username) {
-	string backupFile = username + "_backup.json";
-	json jsonObj = from_json_file(backupFile);
+	try
+	{
+		string backupFile = username + "_backup.json";
+		json jsonObj = from_json_file(backupFile);
 
-	FavouriteLocation fav = get_favourite_from_json_object(jsonObj);
+		FavouriteLocation fav = get_favourite_from_json_object(jsonObj);
 
-	auto oldFavourites = get_all_favourite_locations_from_json(FavouriteLocation::get_file_path());
-	vector<FavouriteLocation> newFavourites{ fav };
-	for (auto oldFav : oldFavourites) {
-		if (oldFav.username != username) {
-			newFavourites.push_back(oldFav);
+		auto oldFavourites = get_all_favourite_locations_from_json(FavouriteLocation::get_file_path());
+		vector<FavouriteLocation> newFavourites{ fav };
+		for (auto oldFav : oldFavourites) {
+			if (oldFav.username != username) {
+				newFavourites.push_back(oldFav);
+			}
 		}
+		auto jsonArray = to_json_array_favourite_location(newFavourites);
+		to_json_file(jsonArray, FavouriteLocation::get_file_path());
+		return true;
 	}
-	auto jsonArray = to_json_array_favourite_location(newFavourites);
-	to_json_file(jsonArray, FavouriteLocation::get_file_path());
-	return true;
+	catch (const std::exception&)
+	{
+		return false;
+	}
 }

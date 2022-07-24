@@ -13,7 +13,9 @@
 #include "Account.h"
 #include "LocationService.h"
 #include "SharedLocationService.h"
+#include "Location.h"
 #include "../Shared/Enum.h"
+#include "vector"
 
 #pragma comment (lib,"ws2_32.lib")
 
@@ -34,10 +36,13 @@ typedef struct {
 	string username = "";
 	string waitingMessage = "";
 	vector<string> responses;
+	vector<string> listData;
 } client;
 
 // store account list get from account.txt
 vector<Account> accountList;
+
+vector<Location> locationList;
 
 // List function
 void getAccountData();
@@ -46,6 +51,8 @@ vector<string> process(int ret, string buff, client* currentClient);
 string loginAccount(string username, string password, client* client);
 string registerAccount(string username, string password, client* client);
 string logoutAccount(client* client);
+void getLocationData();
+string getLocation(string type, client* client);
 
 /* userThread - Thread to receive the user message from client*/
 unsigned __stdcall userThread(void *param) {
@@ -75,6 +82,29 @@ unsigned __stdcall userThread(void *param) {
 					printf("Error %d: Cannot send data to client[%s:%d]\n", WSAGetLastError(), clientIP, clientPort);
 					break;
 				}
+			}
+
+			cout << currentClient.listData.size() << endl;
+			if (currentClient.listData.size() != 0) {
+				string length = to_string(currentClient.listData.size());
+				ret = send(connectedSocket, length.c_str(), strlen(length.c_str()), 0);
+				if (ret == SOCKET_ERROR) {
+					printf("Error %d: Cannot send data to client[%s:%d]\n", WSAGetLastError(), clientIP, clientPort);
+					break;
+				}
+
+				for (int i = 0; i < currentClient.listData.size(); i++) {
+					string response = currentClient.listData[i];
+					cout << "Sending data..." << endl;
+					Sleep(200);
+					ret = send(connectedSocket, response.c_str(), strlen(response.c_str()), 0);
+
+					if (ret == SOCKET_ERROR) {
+						printf("Error %d: Cannot send data to client[%s:%d]\n", WSAGetLastError(), clientIP, clientPort);
+						break;
+					}
+				}
+				currentClient.listData.clear();
 			}
 		}
 	}
@@ -152,6 +182,12 @@ void getAccountData() {
 	accountList = get_all_accounts_from_json(Account::get_file_path());
 }
 
+
+void getLocationData() {
+	locationList.clear();
+	locationList = get_all_locations_from_json(locationStore);
+
+}
 
 
 /*
@@ -251,6 +287,18 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(response);
 			}
 		}
+		else if (messageData[0] == sendMessage.GET) {
+			if (messageData.size() != 2) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else if (messageData[1] == "") {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = getLocation(messageData[1], currentClient);
+				responses.push_back(response);
+			}
+		}
 		// LOGOUT
 		else if (messageData[0] == sendMessage.LOGOUT) {
 			string response = logoutAccount(currentClient);
@@ -300,7 +348,7 @@ string registerAccount(string username, string password, client* client) {
 	getAccountData();
 
 	for (int i = 0; i < accountList.size(); i++) {
-		if (accountList[i].username == username && accountList[i].password == password) {
+		if (accountList[i].username == username) {
 			return responseCode.errorExistedUsername;
 		}
 	}
@@ -320,4 +368,35 @@ string logoutAccount(client* client) {
 	client->username = "";
 	return responseCode.successLogout;
 
+}
+/*
+string addLocation(int type, string name, string address, string description) {
+
+}
+*/
+
+string getLocation(string type, client* client) {
+	getLocationData();
+	client->listData.clear();
+	if (type == "*") {
+		string responseListData = "";
+		for (int i = 0; i < locationList.size(); i++) {
+			responseListData = locationList[i].id + "$" + locationList[i].name + "$" + to_string(locationList[i].type) + "$" + locationList[i].description + "$" + locationList[i].address;
+			client->listData.push_back(responseListData);
+		}
+		return responseCode.successGetLocation;
+	}
+	else {
+		string responseListData = "";
+
+		for (int i = 0; i < locationList.size(); i++) {
+			if (to_string(locationList[i].type) == type) {
+				responseListData = locationList[i].id + "$" + locationList[i].name + "$" + to_string(locationList[i].type) + "$" + locationList[i].description + "$" + locationList[i].address;
+				client->listData.push_back(responseListData);
+
+			}
+		}
+
+		return responseCode.successGetLocation;
+	}
 }

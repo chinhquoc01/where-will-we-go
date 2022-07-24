@@ -1,5 +1,5 @@
 ﻿#include "string"
-#include "nlohmann\json.hpp"
+#include "../packages/nlohmann.json.3.10.5/build/native/include/nlohmann/json.hpp"
 using namespace std;
 using json = nlohmann::json;
 

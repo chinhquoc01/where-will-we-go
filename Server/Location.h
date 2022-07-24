@@ -1,7 +1,7 @@
 #include "Common.h"
 #pragma once
-class Location
-{
+
+class Location {
 public:
 	string id;
 	string name;
@@ -12,6 +12,9 @@ public:
 	Location(string _id, string _name, int _type, string _description, string _address);
 	Location(string _name, int _type, string _description, string _address);
 	json to_json_obj();
+	static string get_file_path() {
+		return LOCATIONS_PATH;
+	}
 };
 
 json to_json_array_location(vector<Location> v);

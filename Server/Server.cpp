@@ -304,14 +304,21 @@ vector<string> process(int ret, string buff, client* currentClient) {
 			else if (messageData[1] == "") {
 				responses.push_back(responseCode.invalidMessage);
 			}
+			else if (currentClient->username == "") {
+				responses.push_back(responseCode.errorUnauthorize);
+			}
 			else {
 				string response = getLocation(messageData[1], currentClient);
 				responses.push_back(response);
 			}
 		}
+		// Add location
 		else if (messageData[0] == sendMessage.ADD) {
 			if (messageData.size() != 5) {
 				responses.push_back(responseCode.invalidMessage);
+			}
+			else if (currentClient->username == "") {
+				responses.push_back(responseCode.errorUnauthorize);
 			}
 			else {
 				string response = addLocation(messageData[1], messageData[2], messageData[3], messageData[4], currentClient);
@@ -323,6 +330,9 @@ vector<string> process(int ret, string buff, client* currentClient) {
 			if (messageData.size() != 2 || messageData[1] == "") {
 				responses.push_back(responseCode.invalidMessage);
 			} 
+			else if (currentClient->username == "") {
+				responses.push_back(responseCode.errorUnauthorize);
+			}
 			else {
 				string response = get_favourite_locations(messageData[1], currentClient);
 				responses.push_back(response);
@@ -332,6 +342,9 @@ vector<string> process(int ret, string buff, client* currentClient) {
 		else if (messageData[0] == sendMessage.SAVE) {
 			if (messageData.size() != 2) {
 				responses.push_back(responseCode.invalidMessage);
+			}
+			else if (currentClient->username == "") {
+				responses.push_back(responseCode.errorUnauthorize);
 			}
 			else {
 				string response = save_to_favourite(messageData[1], currentClient);
@@ -343,6 +356,9 @@ vector<string> process(int ret, string buff, client* currentClient) {
 			if (messageData.size() != 1) {
 				responses.push_back(responseCode.invalidMessage);
 			}
+			else if (currentClient->username == "") {
+				responses.push_back(responseCode.errorUnauthorize);
+			}
 			else {
 				string response = get_shared_locations(currentClient);
 				responses.push_back(response);
@@ -352,6 +368,9 @@ vector<string> process(int ret, string buff, client* currentClient) {
 		else if (messageData[0] == sendMessage.SHARE) {
 			if (messageData.size() != 3) {
 				responses.push_back(responseCode.invalidMessage);
+			}
+			else if (currentClient->username == "") {
+				responses.push_back(responseCode.errorUnauthorize);
 			}
 			else {
 				string response = share_location(messageData[1], messageData[2], currentClient);
@@ -363,6 +382,9 @@ vector<string> process(int ret, string buff, client* currentClient) {
 			if (messageData.size() != 2) {
 				responses.push_back(responseCode.invalidMessage);
 			}
+			else if (currentClient->username == "") {
+				responses.push_back(responseCode.errorUnauthorize);
+			}
 			else {
 				string response = accept_shared_location(messageData[1], currentClient);
 				responses.push_back(response);
@@ -372,6 +394,9 @@ vector<string> process(int ret, string buff, client* currentClient) {
 		else if (messageData[0] == sendMessage.REJECT) {
 			if (messageData.size() != 2) {
 				responses.push_back(responseCode.invalidMessage);
+			}
+			else if (currentClient->username == "") {
+				responses.push_back(responseCode.errorUnauthorize);
 			}
 			else {
 				string response = reject_shared_location(messageData[1], currentClient);
@@ -384,7 +409,7 @@ vector<string> process(int ret, string buff, client* currentClient) {
 			responses.push_back(response);
 		}
 		else {
-			responses.push_back("999");
+			responses.push_back(responseCode.invalidMessage);
 		}
 	}
 

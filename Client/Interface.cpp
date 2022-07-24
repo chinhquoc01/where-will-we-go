@@ -231,19 +231,22 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 					else {
 						if (atoi(tmp)> locationData.size()/5 || atoi(tmp) < 0) printf("Location doesn't existed!\n");
 						else {
+							char tmp1[SELECT_SIZE];
 							printf("1. Save\n");
 							printf("2. Shared\n");
 							printf("0. Comeback\n");
 							printf("Enter number to select function: ");
 							fflush(stdin);
-							gets_s(tmp);
+							gets_s(tmp1);
 							
 							
-							if (strcmp(tmp, "1") == 0) {
+							if (strcmp(tmp1, "1") == 0) {
 								strcpy(buff, message.SAVE);
 								strcat(buff, SEPARATOR_CHAR);
+								
 								strcat(buff, locationData[(atoi(tmp) - 1) * 5].c_str());
 								strcat(buff, END_MESS);
+								cout << string(buff) << endl;
 								printf("---------------------------------------\n");
 								send(client, buff, strlen(buff), 0);
 
@@ -251,7 +254,7 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 								buff[ret] = 0;
 								getResponseCode(buff);
 							}
-							else if (strcmp(tmp, "2") == 0) {
+							else if (strcmp(tmp1, "2") == 0) {
 								strcpy(buff, message.SHARE);
 								strcat(buff, SEPARATOR_CHAR);
 								strcat(buff, locationData[(atoi(tmp)-1) * 5].c_str());
@@ -269,7 +272,7 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 								getResponseCode(buff);
 
 							}
-							else if (strcmp(tmp, "0") == 0) {
+							else if (strcmp(tmp1, "0") == 0) {
 								continue;
 							}
 							else {

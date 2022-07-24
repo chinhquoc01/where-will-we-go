@@ -58,7 +58,7 @@ void getResponseCode(char* buff) {
 
 	//Save
 	else if (strcmp(buff, responseCode.successSave) == 0)
-		printf("Sace successfull!");
+		printf("Save successfull!");
 	else if (strcmp(buff, responseCode.errorExistedLocation) == 0)
 		printf("This location has been save before\n");
 

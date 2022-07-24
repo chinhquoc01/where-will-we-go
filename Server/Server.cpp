@@ -157,6 +157,7 @@ int main(int argc, char* argv[])
 	}
 
 	printf("Server started!\n");
+	add_to_favourite("hockt", "testadd");
 
 	//Communicate with client
 	sockaddr_in clientAddr;

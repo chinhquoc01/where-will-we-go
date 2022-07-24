@@ -1,12 +1,11 @@
 #include "Common.h"
-
-
-class Location {
+#pragma once
+class Location
+{
 public:
 	string id;
 	string name;
 	int type;
-	string address;
 	string description;
 	string address;
 	Location();
@@ -15,11 +14,7 @@ public:
 	json to_json_obj();
 };
 
-
-
-
 json to_json_array_location(vector<Location> v);
 vector<Location> get_all_locations_from_json(string path);
 
 vector<Location> get_location_from_id_list(vector<Location> locations, vector<string> idList);
-

@@ -57,6 +57,9 @@
     <ClInclude Include="FavouriteLocationService.h">
       <Filter>Header Files\Service</Filter>
     </ClInclude>
+    <ClInclude Include="AccountService.h">
+      <Filter>Header Files\Service</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -87,6 +90,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FavouriteLocationService.cpp">
+      <Filter>Source Files\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="AccountService.cpp">
       <Filter>Source Files\Service</Filter>
     </ClCompile>
   </ItemGroup>

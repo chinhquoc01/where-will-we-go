@@ -13,6 +13,7 @@
 #include "Account.h"
 #include "LocationService.h"
 #include "SharedLocationService.h"
+#include "FavouriteLocationService.h"
 #include "Location.h"
 #include "../Shared/Enum.h"
 #include "vector"
@@ -53,6 +54,14 @@ string registerAccount(string username, string password, client* client);
 string logoutAccount(client* client);
 void getLocationData();
 string getLocation(string type, client* client);
+string get_favourite_locations(string type, client* client);
+string get_shared_locations(client* client);
+string share_location(string idLocation, string receiver, client* client);
+string save_to_favourite(string idLocation, client* client);
+string accept_shared_location(string idLocation, client* client);
+string reject_shared_location(string idLocation, client* client);
+string backup(client* client);
+string restore(client* client);
 
 /* userThread - Thread to receive the user message from client*/
 unsigned __stdcall userThread(void *param) {
@@ -146,7 +155,6 @@ int main(int argc, char* argv[])
 	}
 
 	printf("Server started!\n");
-	
 
 	//Communicate with client
 	sockaddr_in clientAddr;
@@ -185,8 +193,7 @@ void getAccountData() {
 
 void getLocationData() {
 	locationList.clear();
-	locationList = get_all_locations_from_json(locationStore);
-
+	locationList = get_all_locations_from_json(Location::get_file_path());
 }
 
 
@@ -287,6 +294,7 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(response);
 			}
 		}
+		// Get all locations
 		else if (messageData[0] == sendMessage.GET) {
 			if (messageData.size() != 2) {
 				responses.push_back(responseCode.invalidMessage);
@@ -299,6 +307,67 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(response);
 			}
 		}
+		// GET Favourite
+		else if (messageData[0] == sendMessage.GETFAVOURITE) {
+			if (messageData.size() != 2 || messageData[1] == "") {
+				responses.push_back(responseCode.invalidMessage);
+			} 
+			else {
+				string response = get_favourite_locations(messageData[1], currentClient);
+				responses.push_back(response);
+			}
+		}
+		// Save to favourite
+		else if (messageData[0] == sendMessage.SAVE) {
+			if (messageData.size() != 2) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = save_to_favourite(messageData[1], currentClient);
+				responses.push_back(response);
+			}
+		}
+		// Get shared list
+		else if (messageData[0] == sendMessage.GETSHARELIST) {
+			if (messageData.size() != 1) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = get_shared_locations(currentClient);
+				responses.push_back(response);
+			}
+		}
+		// Share
+		else if (messageData[0] == sendMessage.SHARE) {
+			if (messageData.size() != 3) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = share_location(messageData[1], messageData[2], currentClient);
+				responses.push_back(response);
+			}
+		}
+		// Accept
+		else if (messageData[0] == sendMessage.ACCEPT) {
+			if (messageData.size() != 2) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = accept_shared_location(messageData[1], currentClient);
+				responses.push_back(response);
+			}
+		}
+		// Reject
+		else if (messageData[0] == sendMessage.REJECT) {
+			if (messageData.size() != 2) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = reject_shared_location(messageData[1], currentClient);
+				responses.push_back(response);
+			}
+		}
+
 		// LOGOUT
 		else if (messageData[0] == sendMessage.LOGOUT) {
 			string response = logoutAccount(currentClient);
@@ -399,4 +468,111 @@ string getLocation(string type, client* client) {
 
 		return responseCode.successGetLocation;
 	}
+}
+
+string get_favourite_locations(string type, client* client) {
+	locationList.clear();
+	client->listData.clear();
+
+	locationList = get_favourite_list(client->username, type);
+
+	for (auto location : locationList) {
+		string responseListData = location.id + "$" + location.name + "$" + to_string(location.type) + "$" + location.description + "$" + location.address;
+		client->listData.push_back(responseListData);
+	}
+	return responseCode.successGetFavorite;
+}
+
+string get_shared_locations(client* client) {
+	locationList.clear();
+	client->listData.clear();
+
+	auto mapShared = get_shared_location_by_username(client->username, "*");
+	for (auto shared : mapShared) {
+		try
+		{
+			Location l = get_location_by_id(shared.first);
+			string senders = "";
+			for (int i = 0; i < shared.second.size(); i++) {
+				if (i == shared.second.size() - 1) {
+					senders = senders + shared.second[i];
+				}
+				else {
+					senders = senders + shared.second[i] + ", ";
+				}
+			}
+			string responseListData = l.id + "$" + l.name + "$" + to_string(l.type) + "$" + l.description + "$" + l.address + "$" + senders;
+			client->listData.push_back(responseListData);
+		}
+		catch (const std::exception&)
+		{
+			continue;
+		}
+	}
+
+	return responseCode.successGetSharedList;
+}
+
+string share_location(string idLocation, string receiver, client* client) {
+	auto shared = save_shared_location(client->username, receiver, idLocation);
+	if (shared == true) {
+		return responseCode.successShare;
+	}
+	else {
+		return responseCode.notFoundUsername;
+	}
+}
+
+string save_to_favourite(string idLocation, client* client) {
+	bool added = add_to_favourite(client->username, idLocation);
+	if (added == true) {
+		return responseCode.successSave;
+	}
+	else {
+		return responseCode.errorSave;
+	}
+}
+
+string accept_shared_location(string idLocation, client* client) {
+	bool accepted = accept_shared_location(client->username, idLocation);
+	if (accepted == true) {
+		return responseCode.successAccept;
+	}
+	else {
+		return responseCode.errorAccept;
+	}
+}
+
+string reject_shared_location(string idLocation, client* client) {
+	bool rejected = reject_shared_location(client->username, idLocation);
+	if (rejected == true) {
+		return responseCode.successReject;
+	}
+	else {
+		return responseCode.errorReject;
+	}
+}
+
+string backup(client* client) {
+	bool backuped = backup_favourite(client->username);
+	if (backuped == true) {
+		return responseCode.successBackup;
+	}
+	else {
+		return responseCode.errorBackup;
+	}
+}
+
+string restore(client* client) {
+	bool restored = restore_favourite(client->username);
+	if (restored == true) {
+		return responseCode.successRestore;
+	}
+	else {
+		return responseCode.errorNoBackup;
+	}
+}
+
+bool check_share_notification(client* client) {
+	return check_have_shared_location(client->username);
 }

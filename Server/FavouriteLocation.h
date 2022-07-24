@@ -14,3 +14,4 @@ public:
 json to_json_array_favourite_location(vector<FavouriteLocation> favLocations);
 vector<FavouriteLocation> get_all_favourite_locations_from_json(string path);
 vector<string> get_favourite_location_id(string path, string username);
+FavouriteLocation get_favourite_from_json_object(json jsonObj);

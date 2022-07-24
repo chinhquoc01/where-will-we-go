@@ -21,3 +21,13 @@ vector<Location> get_locations_by_type(string type) {
 	}
 	return res;
 }
+
+Location get_location_by_id(string id) {
+	auto locations = get_all_location();
+	for (auto l : locations) {
+		if (l.id == id) {
+			return l;
+		}
+	}
+	throw;
+}

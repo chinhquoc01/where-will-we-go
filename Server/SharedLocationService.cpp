@@ -1,6 +1,7 @@
 ﻿#include "SharedLocation.h"
 #include "LocationService.h"
 #include "FavouriteLocationService.h"
+#include "AccountService.h"
 
 /*
 Get all shared location from file
@@ -44,7 +45,12 @@ map<string, vector<string>> get_shared_location_by_username(string username, str
 	return res;
 }
 
-bool save_shared_location(string sender, string receiver, vector<string> locationIds) {
+bool save_shared_location(string sender, string receiver, string locationId) {
+	// Kiểm tra recevier
+	if (find_account_by_username(receiver) == false) {
+		return false;
+	}
+
 	// Lấy vector shared location từ file shared
 	auto sharedLocations = get_all_shared_location();
 
@@ -54,14 +60,12 @@ bool save_shared_location(string sender, string receiver, vector<string> locatio
 		if (sharedLocation.sender == sender && sharedLocation.receiver == receiver) {
 			found = true;
 			if (sharedLocation.sharedList.empty()) {
-				sharedLocation.sharedList = locationIds;
+				sharedLocation.sharedList = vector<string>{locationId};
 			}
 			else {
-				for (auto id : locationIds) {
-					// Nếu chưa có trong danh sách yêu thích thì mới thêm
-					if (find(sharedLocation.sharedList.begin(), sharedLocation.sharedList.end(), id) == sharedLocation.sharedList.end()) {
-						sharedLocation.sharedList.push_back(id);
-					}
+				// Nếu chưa có trong danh sách yêu thích thì mới thêm
+				if (find(sharedLocation.sharedList.begin(), sharedLocation.sharedList.end(), locationId) == sharedLocation.sharedList.end()) {
+					sharedLocation.sharedList.push_back(locationId);
 				}
 			}
 			break;
@@ -73,7 +77,7 @@ bool save_shared_location(string sender, string receiver, vector<string> locatio
 		SharedLocation newSharedLocation;
 		newSharedLocation.sender = sender;
 		newSharedLocation.receiver = receiver;
-		newSharedLocation.sharedList = locationIds;
+		newSharedLocation.sharedList = vector<string>{ locationId };
 		sharedLocations.push_back(newSharedLocation);
 	}
 
@@ -127,4 +131,14 @@ bool reject_shared_location(string username, string locationId) {
 	json sharedArrayJson = to_json_array_shared_location(allSharedLocation);
 	to_json_file(sharedArrayJson, "sharedLocations.json");
 	return true;
+}
+
+bool check_have_shared_location(string username) {
+	auto sharedLocations = get_all_shared_location();
+	for (auto shared : sharedLocations) {
+		if (shared.receiver == username && shared.sharedList.size() != 0) {
+			return true;
+		}
+	}
+	return false;
 }

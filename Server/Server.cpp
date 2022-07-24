@@ -13,6 +13,7 @@
 #include "Account.h"
 #include "LocationService.h"
 #include "../Shared/Enum.h"
+#include "vector"
 
 #pragma comment (lib,"ws2_32.lib")
 
@@ -329,7 +330,7 @@ string registerAccount(string username, string password, client* client) {
 	getAccountData();
 
 	for (int i = 0; i < accountList.size(); i++) {
-		if (accountList[i].username == username && accountList[i].password == password) {
+		if (accountList[i].username == username) {
 			return responseCode.errorExistedUsername;
 		}
 	}

@@ -18,5 +18,33 @@
     {
         "password": "123456",
         "username": "user4"
+    },
+    {
+        "password": "1234",
+        "username": "hoc"
+    },
+    {
+        "password": "1234",
+        "username": "hockt"
+    },
+    {
+        "password": "123456",
+        "username": "hockt"
+    },
+    {
+        "password": "12345",
+        "username": "hockt"
+    },
+    {
+        "password": "quocpc",
+        "username": "hockt"
+    },
+    {
+        "password": "234",
+        "username": "hockt"
+    },
+    {
+        "password": "2314",
+        "username": "hockt"
     }
 ]

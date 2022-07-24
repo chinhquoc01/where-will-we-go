@@ -54,6 +54,7 @@ string registerAccount(string username, string password, client* client);
 string logoutAccount(client* client);
 void getLocationData();
 string getLocation(string type, client* client);
+string addLocation(string name, string type, string address, string description, client* client);
 string get_favourite_locations(string type, client* client);
 string get_shared_locations(client* client);
 string share_location(string idLocation, string receiver, client* client);
@@ -308,6 +309,15 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(response);
 			}
 		}
+		else if (messageData[0] == sendMessage.ADD) {
+			if (messageData.size() != 5) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = addLocation(messageData[1], messageData[2], messageData[3], messageData[4], currentClient);
+				responses.push_back(response);
+			}
+		}
 		// GET Favourite
 		else if (messageData[0] == sendMessage.GETFAVOURITE) {
 			if (messageData.size() != 2 || messageData[1] == "") {
@@ -368,7 +378,6 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(response);
 			}
 		}
-
 		// LOGOUT
 		else if (messageData[0] == sendMessage.LOGOUT) {
 			string response = logoutAccount(currentClient);
@@ -439,11 +448,24 @@ string logoutAccount(client* client) {
 	return responseCode.successLogout;
 
 }
-/*
-string addLocation(int type, string name, string address, string description) {
 
+string addLocation(string name, string type, string address, string description, client* client) {
+	if (name == "" || type == "" || address == "" || description == "") {
+		return responseCode.errorInvalidInput;
+	}
+	if (stoi(type) < 1 || stoi(type) > 4) {
+		return responseCode.errorInvalidInput;
+	}
+	getLocationData();
+
+	Location l(name, stoi(type), description, address);
+	locationList.push_back(l);
+
+	json locationJsonObj = to_json_array_location(locationList);
+	to_json_file(locationJsonObj, locationStore);
+
+	return responseCode.successAdd;
 }
-*/
 
 string getLocation(string type, client* client) {
 	getLocationData();

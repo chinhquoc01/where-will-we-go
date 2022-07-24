@@ -147,8 +147,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Account.h" />
+    <ClInclude Include="AccountService.h" />
     <ClInclude Include="Common.h" />
-    <ClInclude Include="Enum.h" />
     <ClInclude Include="FavouriteLocation.h" />
     <ClInclude Include="FavouriteLocationService.h" />
     <ClInclude Include="Location.h" />
@@ -161,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
+    <ClCompile Include="AccountService.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="FavouriteLocation.cpp" />
     <ClCompile Include="FavouriteLocationService.cpp" />

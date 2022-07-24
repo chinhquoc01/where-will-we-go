@@ -14,6 +14,7 @@ const struct ResponseCode {
 	char* successGetLocation = "120";
 	char* successGetFavorite = "130";
 	char* successSave = "140";
+	char* errorSave = "141";
 	char* errorExistedLocation = "141";
 	char* successAdd = "150";
 	char* errorInvalidInput = "151";
@@ -23,8 +24,11 @@ const struct ResponseCode {
 	char* notFoundUsername = "171";
 	char* successGetSharedList = "180";
 	char* successAccept = "190";
+	char* errorAccept = "191";
 	char* successReject = "200";
+	char* errorReject = "201";
 	char* successBackup = "210";
+	char* errorBackup = "211";
 	char* successRestore = "220";
 	char* errorNoBackup = "221";
 	char* successLogout = "230";

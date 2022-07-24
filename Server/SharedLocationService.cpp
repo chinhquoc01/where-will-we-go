@@ -1,18 +1,20 @@
 ﻿#include "SharedLocation.h"
 #include "LocationService.h"
+#include "FavouriteLocationService.h"
+#include "AccountService.h"
 
 /*
 Get all shared location from file
 @params path: path to file
 @return vector<SharedLocation>
 */
-vector<SharedLocation> get_all_shared_location(string path) {
-	auto sharedLocations = get_all_shared_locations_from_json(path);
+vector<SharedLocation> get_all_shared_location() {
+	auto sharedLocations = get_all_shared_locations_from_json(SharedLocation::get_file_path());
 	return sharedLocations;
 }
 
-map<string, vector<string>> get_shared_location_by_username(string path, string username, string locationType) {
-	auto sharedLocations = get_all_shared_locations_from_json(path);
+map<string, vector<string>> get_shared_location_by_username(string username, string locationType) {
+	auto sharedLocations = get_all_shared_locations_from_json(SharedLocation::get_file_path());
 	map<string, vector<string>> mapShared;
 	for (auto sharedLocation : sharedLocations) {
 		if (sharedLocation.receiver == username) {
@@ -43,9 +45,14 @@ map<string, vector<string>> get_shared_location_by_username(string path, string 
 	return res;
 }
 
-bool save_shared_location(string path, string sender, string receiver, vector<string> locationIds) {
+bool save_shared_location(string sender, string receiver, string locationId) {
+	// Kiểm tra recevier
+	if (find_account_by_username(receiver) == false) {
+		return false;
+	}
+
 	// Lấy vector shared location từ file shared
-	auto sharedLocations = get_all_shared_location(path);
+	auto sharedLocations = get_all_shared_location();
 
 	bool found = false;
 	for (auto & sharedLocation : sharedLocations) {
@@ -53,14 +60,12 @@ bool save_shared_location(string path, string sender, string receiver, vector<st
 		if (sharedLocation.sender == sender && sharedLocation.receiver == receiver) {
 			found = true;
 			if (sharedLocation.sharedList.empty()) {
-				sharedLocation.sharedList = locationIds;
+				sharedLocation.sharedList = vector<string>{locationId};
 			}
 			else {
-				for (auto id : locationIds) {
-					// Nếu chưa có trong danh sách yêu thích thì mới thêm
-					if (find(sharedLocation.sharedList.begin(), sharedLocation.sharedList.end(), id) == sharedLocation.sharedList.end()) {
-						sharedLocation.sharedList.push_back(id);
-					}
+				// Nếu chưa có trong danh sách yêu thích thì mới thêm
+				if (find(sharedLocation.sharedList.begin(), sharedLocation.sharedList.end(), locationId) == sharedLocation.sharedList.end()) {
+					sharedLocation.sharedList.push_back(locationId);
 				}
 			}
 			break;
@@ -72,13 +77,68 @@ bool save_shared_location(string path, string sender, string receiver, vector<st
 		SharedLocation newSharedLocation;
 		newSharedLocation.sender = sender;
 		newSharedLocation.receiver = receiver;
-		newSharedLocation.sharedList = locationIds;
+		newSharedLocation.sharedList = vector<string>{ locationId };
 		sharedLocations.push_back(newSharedLocation);
 	}
 
 	auto jsonArray = to_json_array_shared_location(sharedLocations);
 
-	to_json_file(jsonArray, path);
+	to_json_file(jsonArray, SharedLocation::get_file_path());
 
 	return true;
+}
+
+bool accept_shared_location(string username, string locationId) {
+	auto allSharedLocation = get_all_shared_location();
+	string sender;
+	bool accept = false;
+	// Xoá từ kho shared
+	for (auto & shared : allSharedLocation) {
+		auto found = find(shared.sharedList.begin(), shared.sharedList.end(), locationId);
+		if (shared.receiver == username && found != shared.sharedList.end()) {
+			accept = true;
+			shared.sharedList.erase(found);
+			if (sender.empty()) {
+				sender = shared.sender;
+			}
+		}
+	}
+	json sharedArrayJson = to_json_array_shared_location(allSharedLocation);
+	to_json_file(sharedArrayJson, SharedLocation::get_file_path());
+
+	if (accept) {
+		// Thêm vào favourite
+		add_to_favourite(username, locationId, sender);
+	}
+
+	return true;
+}
+
+bool reject_shared_location(string username, string locationId) {
+	auto allSharedLocation = get_all_shared_location();
+	string sender;
+
+	// Xoá từ kho shared
+	for (auto & shared : allSharedLocation) {
+		auto found = find(shared.sharedList.begin(), shared.sharedList.end(), locationId);
+		if (shared.receiver == username && found != shared.sharedList.end()) {
+			shared.sharedList.erase(found);
+			if (sender.empty()) {
+				sender = shared.sender;
+			}
+		}
+	}
+	json sharedArrayJson = to_json_array_shared_location(allSharedLocation);
+	to_json_file(sharedArrayJson, "sharedLocations.json");
+	return true;
+}
+
+bool check_have_shared_location(string username) {
+	auto sharedLocations = get_all_shared_location();
+	for (auto shared : sharedLocations) {
+		if (shared.receiver == username && shared.sharedList.size() != 0) {
+			return true;
+		}
+	}
+	return false;
 }

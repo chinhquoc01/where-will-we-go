@@ -78,7 +78,11 @@ int main(int ardc, char *argv[])
 			//nhan thong diep
 			char rcvbuff[BUFF_SIZE];
 			ret = recv(client, buff, BUFF_SIZE, 0);
-			buff[ret] = 0;
+			if (ret == 4) {
+				printf("You have been shared some locations by your friend.\n");
+				Sleep(1000);
+			}
+			buff[3] = 0;
 
 			getResponseCode(buff);
 			Sleep(1000);

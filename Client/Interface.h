@@ -6,7 +6,8 @@
 void input(char* buff, char* select_function);
 
 //Giao dien dang ky dang nhap
-void register_login(char* buff, char* select_function);
+void UI_register_login(char* buff, char* select_function);
 
 //Giao dien cac chuc nang
-void function(SOCKET client, char* buff, char* select_function);
+void clientProcess(SOCKET client, char* buff, char* select_function);
+

@@ -7,6 +7,8 @@
 #include <WS2tcpip.h>
 #include "Interface.h"
 #include "../Shared/Enum.h"
+#include "iostream"
+#include "../Server/Location.h"
 
 #define SERVER_PORT 5500 
 #define SERVER_ADDR "127.0.0.1" 
@@ -20,44 +22,50 @@ using namespace std;
 const ResponseCode responseCode;
 const Message message;
 
-int main(int ardc, char* argv[])
+vector<Location> locationList;
+
+
+int main(int ardc, char *argv[])
 {
-	//Inittiate WinSock
+	// Inittiate WinSock
 	WSADATA wsaData;
 	WORD wVersion = MAKEWORD(2, 2);
-	if (WSAStartup(wVersion, &wsaData)) {
+	if (WSAStartup(wVersion, &wsaData))
+	{
 		printf("Winsock 2.2. is not supported\n");
 		return 0;
 	}
 
-	//Construct socket
+	// Construct socket
 	SOCKET client;
 	client = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (client == INVALID_SOCKET) {
+	if (client == INVALID_SOCKET)
+	{
 		printf("Error %d: Cannot create client socket.", WSAGetLastError());
 		return 0;
 	}
 
-	//Specify server address
+	// Specify server address
 	sockaddr_in serverAddr;
 	serverAddr.sin_family = AF_INET;
 	serverAddr.sin_port = htons(SERVER_PORT);
 	inet_pton(AF_INET, SERVER_ADDR, &serverAddr.sin_addr);
 
-	//Request to connect server
-	if (connect(client, (sockaddr *)&serverAddr, sizeof(serverAddr))) {
+	// Request to connect server
+	if (connect(client, (sockaddr *)&serverAddr, sizeof(serverAddr)))
+	{
 		printf("Error %d: Cannot connect server.", WSAGetLastError());
 		return 0;
 	}
 
 	printf("Connected server!\n");
 
-	//Comunicate with server
+	// Comunicate with server
 
 	int ret, messageLen;
 	char buff[BUFF_SIZE], select_function[SELECT_SIZE];
 	while (1) {
-		register_login(buff, select_function);
+		UI_register_login(buff, select_function);
 		if (strcmp(select_function, "3") == 0) break;
 		else if (strcmp(select_function, "0") == 0) {
 			system("cls");
@@ -75,16 +83,15 @@ int main(int ardc, char* argv[])
 			getResponseCode(buff);
 			Sleep(1000);
 			if (strcmp(buff, responseCode.successLogin) == 0) {
-				function(client, buff, select_function);
+				clientProcess(client, buff, select_function);
 			}
 		}
 	}
 
-	//Close socket 
+	// Close socket
 	closesocket(client);
 
-	//Terminate Winsock
+	// Terminate Winsock
 	WSACleanup();
 	return 0;
 }
-

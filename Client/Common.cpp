@@ -122,7 +122,6 @@ vector<string> recvLocationData(SOCKET client, char* buff) {
 
 	int ret;
 	vector<string> locationData;
-	strcpy(buff, "");
 	ret = recv(client, buff, BUFF_SIZE, 0);
 	if (ret == SOCKET_ERROR) {
 		if (WSAGetLastError() == WSAETIMEDOUT)
@@ -135,7 +134,8 @@ vector<string> recvLocationData(SOCKET client, char* buff) {
 	}
 
 	string responseCodeGetLocation(buff);
-	if (responseCodeGetLocation == responseCode.successGetLocation) {
+	if (responseCodeGetLocation == responseCode.successGetLocation || responseCodeGetLocation == responseCode.successGetFavorite
+		|| responseCodeGetLocation == responseCode.successGetSharedList) {
 		ret = recv(client, buff, BUFF_SIZE, 0);
 		if (ret == SOCKET_ERROR) {
 			if (WSAGetLastError() == WSAETIMEDOUT)
@@ -149,7 +149,6 @@ vector<string> recvLocationData(SOCKET client, char* buff) {
 		string strLength(buff);
 		int length = stoi(strLength);
 		for (int i = 0; i < length; i++) {
-
 			ret = recv(client, buff, BUFF_SIZE, 0);
 			if (ret == SOCKET_ERROR) {
 				if (WSAGetLastError() == WSAETIMEDOUT)
@@ -158,16 +157,29 @@ vector<string> recvLocationData(SOCKET client, char* buff) {
 			}
 			else if (strlen(buff) > 0) {
 				buff[ret] = 0;
+				if(strcmp(buff, "nodata") == 0) return vector<string>{""};
 				string response(buff);
+				
 				vector<string> messageData = split(response, '$');
-				if (messageData.size() < 5) {
-					printf("List location is empty.\n");
-					return vector<string>{""};
+				if (responseCodeGetLocation == responseCode.successGetSharedList) {
+					if (messageData.size() < 6) {
+						printf("List location is empty.\n");
+					}
+					for (int j = 0; j < 6; j++)
+					{
+						locationData.push_back(messageData[j]);
+					}
 				}
-				for (int j = 0; j < 5; j++)
-				{
-					locationData.push_back(messageData[j]);
+				else {
+					if (messageData.size() < 5) {
+						printf("List location is empty.\n");
+					}
+					for (int j = 0; j < 5; j++)
+					{
+						locationData.push_back(messageData[j]);
+					}
 				}
+				
 			}
 		}
 		return locationData;

@@ -157,7 +157,6 @@ int main(int argc, char* argv[])
 	}
 
 	printf("Server started!\n");
-	add_to_favourite("hockt", "testadd");
 
 	//Communicate with client
 	sockaddr_in clientAddr;
@@ -451,10 +450,7 @@ string loginAccount(string username, string password, client* client) {
 	for (int i = 0; i < accountList.size(); i++) {
 		if (accountList[i].username == username && accountList[i].password == password) {
 			client->username = username;
-			bool isHaveNotification = check_share_notification(client);
-			if (isHaveNotification) {
-				return responseCode.successLogin + 'x';
-			}
+			
 			return responseCode.successLogin;
 		}
 	}
@@ -547,7 +543,7 @@ string get_favourite_locations(string type, client* client) {
 
 	locationList = get_favourite_list(client->username, type);
 	if (locationList.size() == 0) {
-		client->listData.push_back("");
+		client->listData.push_back("nodata");
 	}
 	else {
 		for (auto location : locationList) {
@@ -563,28 +559,32 @@ string get_shared_locations(client* client) {
 	client->listData.clear();
 
 	auto mapShared = get_shared_location_by_username(client->username, "*");
-	for (auto shared : mapShared) {
-		try
-		{
-			Location l = get_location_by_id(shared.first);
-			string senders = "";
-			for (int i = 0; i < shared.second.size(); i++) {
-				if (i == shared.second.size() - 1) {
-					senders = senders + shared.second[i];
+	if (mapShared.size() == 0) {
+		client->listData.push_back("nodata");
+	}
+	else {
+		for (auto shared : mapShared) {
+			try
+			{
+				Location l = get_location_by_id(shared.first);
+				string senders = "";
+				for (int i = 0; i < shared.second.size(); i++) {
+					if (i == shared.second.size() - 1) {
+						senders = senders + shared.second[i];
+					}
+					else {
+						senders = senders + shared.second[i] + ", ";
+					}
 				}
-				else {
-					senders = senders + shared.second[i] + ", ";
-				}
+				string responseListData = l.id + "$" + l.name + "$" + to_string(l.type) + "$" + l.description + "$" + l.address + "$" + senders;
+				client->listData.push_back(responseListData);
 			}
-			string responseListData = l.id + "$" + l.name + "$" + to_string(l.type) + "$" + l.description + "$" + l.address + "$" + senders;
-			client->listData.push_back(responseListData);
-		}
-		catch (const std::exception&)
-		{
-			continue;
+			catch (const std::exception&)
+			{
+				continue;
+			}
 		}
 	}
-
 	return responseCode.successGetSharedList;
 }
 

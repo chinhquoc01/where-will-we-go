@@ -41,16 +41,22 @@
     {
         "receiver": "hockt",
         "sender": "hocpc",
-        "sharedList": [
-            "AH03WO"
-        ]
+        "sharedList": []
     },
     {
         "receiver": "hocpc",
         "sender": "hockt",
         "sharedList": [
             "eqI36l",
-            "870PxV"
+            "870PxV",
+            "AH03WO"
+        ]
+    },
+    {
+        "receiver": "hockt",
+        "sender": "hockt",
+        "sharedList": [
+            "AH03WO"
         ]
     }
 ]

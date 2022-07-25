@@ -19,8 +19,10 @@ const struct ResponseCode {
 	char* errorInvalidInput = "151";
 	char* errorNotExistType = "152";
 	char* successDelete = "160";
+	char* errorDelete = "161";
 	char* successShare = "170";
 	char* notFoundUsername = "171";
+	char* errorSelfShare = "172";
 	char* successGetSharedList = "180";
 	char* successAccept = "190";
 	char* errorAccept = "191";

@@ -115,3 +115,21 @@ bool restore_favourite(string username) {
 		return false;
 	}
 }
+
+bool remove_from_favourite(string username, string locationId) {
+	auto favouriteLocations = get_all_favourite_locations_from_json(FavouriteLocation::get_file_path());
+	bool removed = false;
+	for (auto & fav : favouriteLocations) {
+		auto it = find(fav.favLocationIdList.begin(), fav.favLocationIdList.end(), locationId);
+		if (fav.username == username && it != fav.favLocationIdList.end()) {
+			int removeIndex = it - fav.favLocationIdList.begin();
+			fav.favLocationIdList.erase(it);
+			fav.senderList.erase(fav.senderList.begin() + removeIndex);
+			removed = true;
+		}
+	}
+	auto jsonArray = to_json_array_favourite_location(favouriteLocations);
+
+	to_json_file(jsonArray, FavouriteLocation::get_file_path());
+	return removed;
+}

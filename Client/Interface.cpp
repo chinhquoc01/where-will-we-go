@@ -86,7 +86,7 @@ void getSharedList(vector<string> locationData, char* select_function) {
 	int nameSizeMax = 0, desSizeMax = 0, senderSizeMax = 0;
 	if (locationData.size() == 1 && locationData[0] == "") {
 		printf("No data!\n");
-		Sleep(1000);
+		Sleep(3000);
 		return;
 	}
 	for (int i = 1; i < locationData.size(); i += 6) {
@@ -172,7 +172,7 @@ void getLocation(vector<string> locationData, char* select_function) {
 	int nameSizeMax = 0, desSizeMax = 0;
 	if (locationData.size() == 1 && locationData[0] == "") {
 		printf("No data!\n");
-		Sleep(1000);
+		Sleep(3000);
 		return;
 	}
 	for (int i = 1; i < locationData.size(); i += 5) {
@@ -270,13 +270,15 @@ void IDType(char* select_function) {
 }
 
 //fuction interface
-void clientProcess(SOCKET client, char* buff, char* select_function) {
-	system("cls");
-
+void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNoti) {
 	while (1) {
 		if (strcmp(select_function, "7") == 0) break;
 
 		system("cls");
+		if (haveNoti) {
+			printf("You have been shared some locations by your friend.\n");
+			haveNoti = false;
+		}
 		printf("---------------------------------------------\n");
 		printf("| NUMBER|             FUNCTION              |\n");
 		printf("---------------------------------------------\n");
@@ -350,8 +352,6 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 
 
 									if (strcmp(tmp1, "1") == 0) {
-										cout << tmp1 << endl;
-										cout << tmp << endl;
 										strcpy(buff, message.SAVE);
 										strcat(buff, SEPARATOR_CHAR);
 
@@ -382,9 +382,11 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 										int ret = recv(client, buff, BUFF_SIZE, 0);
 										buff[ret] = 0;
 										getResponseCode(buff);
+										printf("---------------------------------------\n");
 										Sleep(1000);
 										if (strcmp(buff, responseCode.successShare) == 0) break;
 										else if (strcmp(buff, responseCode.notFoundUsername) == 0) continue;
+										else if (strcmp(buff, responseCode.errorSelfShare) == 0) continue;
 
 									}
 									else if (strcmp(tmp1, "0") == 0) {
@@ -468,6 +470,7 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 										int ret = recv(client, buff, BUFF_SIZE, 0);
 										buff[ret] = 0;
 										getResponseCode(buff);
+										break;
 									}
 									else if (strcmp(tmp1, "0") == 0) {
 										printf("---------------------------------------\n");
@@ -490,7 +493,7 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 			case 3: {
 				system("cls");
 
-				strcpy(buff, "ADD");
+				strcpy(buff, message.ADD);
 				strcat(buff, SEPARATOR_CHAR);
 				char inp[BUFF_SIZE];
 				printf("Add new location\n");
@@ -521,11 +524,9 @@ void clientProcess(SOCKET client, char* buff, char* select_function) {
 				strcat(buff, END_MESS);
 
 				send(client, buff, strlen(buff), 0);
-				cout << string(buff) << endl;
 
 				int ret = recv(client, buff, BUFF_SIZE, 0);
 				buff[ret] = 0;
-				cout << string(buff) << endl;
 
 				getResponseCode(buff);
 				Sleep(1000);

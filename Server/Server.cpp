@@ -95,7 +95,7 @@ unsigned __stdcall userThread(void *param) {
 				}
 			}
 
-			cout << currentClient.listData.size() << endl;
+			
 			if (currentClient.listData.size() != 0) {
 				string length = to_string(currentClient.listData.size());
 				ret = send(connectedSocket, length.c_str(), strlen(length.c_str()), 0);
@@ -312,7 +312,7 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(response);
 			}
 		}
-		// Add location
+		// Add new location
 		else if (messageData[0] == sendMessage.ADD) {
 			if (messageData.size() != 5) {
 				responses.push_back(responseCode.invalidMessage);
@@ -403,6 +403,24 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(response);
 			}
 		}
+		else if (messageData[0] == sendMessage.BACKUP) {
+			if (messageData.size() != 1) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = backup(currentClient);
+				responses.push_back(response);
+			}
+		}
+		else if (messageData[0] == sendMessage.RESTORE) {
+			if (messageData.size() != 1) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else {
+				string response = restore(currentClient);
+				responses.push_back(response);
+			}
+		}
 		// LOGOUT
 		else if (messageData[0] == sendMessage.LOGOUT) {
 			string response = logoutAccount(currentClient);
@@ -432,10 +450,7 @@ string loginAccount(string username, string password, client* client) {
 	for (int i = 0; i < accountList.size(); i++) {
 		if (accountList[i].username == username && accountList[i].password == password) {
 			client->username = username;
-			bool isHaveNotification = check_share_notification(client);
-			if (isHaveNotification) {
-				return responseCode.successLogin + 'x';
-			}
+			
 			return responseCode.successLogin;
 		}
 	}
@@ -527,10 +542,14 @@ string get_favourite_locations(string type, client* client) {
 	client->listData.clear();
 
 	locationList = get_favourite_list(client->username, type);
-
-	for (auto location : locationList) {
-		string responseListData = location.id + "$" + location.name + "$" + to_string(location.type) + "$" + location.description + "$" + location.address;
-		client->listData.push_back(responseListData);
+	if (locationList.size() == 0) {
+		client->listData.push_back("nodata");
+	}
+	else {
+		for (auto location : locationList) {
+			string responseListData = location.id + "$" + location.name + "$" + to_string(location.type) + "$" + location.description + "$" + location.address;
+			client->listData.push_back(responseListData);
+		}
 	}
 	return responseCode.successGetFavorite;
 }
@@ -540,28 +559,32 @@ string get_shared_locations(client* client) {
 	client->listData.clear();
 
 	auto mapShared = get_shared_location_by_username(client->username, "*");
-	for (auto shared : mapShared) {
-		try
-		{
-			Location l = get_location_by_id(shared.first);
-			string senders = "";
-			for (int i = 0; i < shared.second.size(); i++) {
-				if (i == shared.second.size() - 1) {
-					senders = senders + shared.second[i];
+	if (mapShared.size() == 0) {
+		client->listData.push_back("nodata");
+	}
+	else {
+		for (auto shared : mapShared) {
+			try
+			{
+				Location l = get_location_by_id(shared.first);
+				string senders = "";
+				for (int i = 0; i < shared.second.size(); i++) {
+					if (i == shared.second.size() - 1) {
+						senders = senders + shared.second[i];
+					}
+					else {
+						senders = senders + shared.second[i] + ", ";
+					}
 				}
-				else {
-					senders = senders + shared.second[i] + ", ";
-				}
+				string responseListData = l.id + "$" + l.name + "$" + to_string(l.type) + "$" + l.description + "$" + l.address + "$" + senders;
+				client->listData.push_back(responseListData);
 			}
-			string responseListData = l.id + "$" + l.name + "$" + to_string(l.type) + "$" + l.description + "$" + l.address + "$" + senders;
-			client->listData.push_back(responseListData);
-		}
-		catch (const std::exception&)
-		{
-			continue;
+			catch (const std::exception&)
+			{
+				continue;
+			}
 		}
 	}
-
 	return responseCode.successGetSharedList;
 }
 
@@ -581,7 +604,7 @@ string save_to_favourite(string idLocation, client* client) {
 		return responseCode.successSave;
 	}
 	else {
-		return responseCode.errorSave;
+		return responseCode.errorExistedLocation;
 	}
 }
 

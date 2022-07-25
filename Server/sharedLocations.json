@@ -37,5 +37,26 @@
             "jfakl",
             "r9832"
         ]
+    },
+    {
+        "receiver": "hockt",
+        "sender": "hocpc",
+        "sharedList": []
+    },
+    {
+        "receiver": "hocpc",
+        "sender": "hockt",
+        "sharedList": [
+            "eqI36l",
+            "870PxV",
+            "AH03WO"
+        ]
+    },
+    {
+        "receiver": "hockt",
+        "sender": "hockt",
+        "sharedList": [
+            "AH03WO"
+        ]
     }
 ]

@@ -96,11 +96,11 @@ void getSharedList(vector<string> locationData, char* select_function) {
 	}
 
 	printf("Shared list\n");
-	printf("(IDtype) Restaurant : 1, Coffee: 2, Cinema: 3, Fashion shop: 4\n");
+	printf("(IDtype) Restaurant : 1, Coffee: 2, Cinema: 3, Fashion shop: 4, Other: 5\n");
 	printf("-------------------------------------------------------------------\n");
 	cout << "NUMBER    SENDER";
 	if (senderSizeMax > 6)
-		for (int i = 0; i < (senderSizeMax - 4); i++) cout << " ";
+		for (int i = 0; i < (senderSizeMax - 6); i++) cout << " ";
 	cout << "       ";
 	cout << "ID        NAME";
 	if (nameSizeMax > 4)
@@ -123,20 +123,20 @@ void getSharedList(vector<string> locationData, char* select_function) {
 		//print sender
 		cout << locationData[(count - 1) * 6 + 5];
 		if (senderSizeMax < 6)
-			for (int j = 0; j < (6 - locationData[(count - 1) * 6 + 3].size()); j++)
+			for (int j = 0; j < (6 - locationData[(count - 1) * 6 + 5].size()); j++)
 				cout << " ";
 		else
-			if (locationData[(count - 1) * 5 + 3].size() < senderSizeMax)
-				for (int j = 0; j < (senderSizeMax - locationData[(count - 1) * 6 + 3].size()); j++)
+			if (locationData[(count - 1) * 5 + 5].size() < senderSizeMax)
+				for (int j = 0; j < (senderSizeMax - locationData[(count - 1) * 6 + 5].size()); j++)
 					cout << " ";
 		cout << "    ";
 		//print id
-		cout << "  " << locationData[(count - 1) * 6];
+		cout << " " << locationData[(count - 1) * 6];
 		cout << "      ";
 		//print name
 		cout << locationData[(count - 1) * 6 + 1];
 		if (nameSizeMax < 4)
-			for (int j = 0; j < (4 - locationData[(count - 1) * 6 + 3].size()); j++)
+			for (int j = 0; j < (4 - locationData[(count - 1) * 6 + 1].size()); j++)
 				cout << " ";
 		else
 			if (locationData[(count - 1) * 6 + 1].size() < nameSizeMax)
@@ -167,7 +167,6 @@ void getSharedList(vector<string> locationData, char* select_function) {
 //Get list of location
 void getLocation(vector<string> locationData, char* select_function) {
 	system("cls");
-	system("cls");
 
 	int nameSizeMax = 0, desSizeMax = 0;
 	if (locationData.size() == 1 && locationData[0] == "") {
@@ -190,7 +189,7 @@ void getLocation(vector<string> locationData, char* select_function) {
 		case 4: cout << "List of fashion shop location" << endl; break;
 		}
 	}
-	printf("(IDtype) Restaurant : 1, Coffee: 2, Cinema: 3, Fashion shop: 4\n");
+	printf("(IDtype) Restaurant : 1, Coffee: 2, Cinema: 3, Fashion shop: 4, Other: 5\n");
 	printf("-------------------------------------------------------------------\n");
 	cout << "NUMBER      ID        NAME";
 	if (nameSizeMax > 4){
@@ -217,7 +216,7 @@ void getLocation(vector<string> locationData, char* select_function) {
 		//print name
 		cout << locationData[(count-1)*5+1];
 		if (nameSizeMax < 4)
-			for (int j = 0; j < (4 - locationData[(count-1)*5+3].size()); j++)
+			for (int j = 0; j < (4 - locationData[(count-1)*5+1].size()); j++)
 				cout << " ";
 		else
 			if (locationData[(count-1)*5+1].size() < nameSizeMax)
@@ -257,6 +256,8 @@ void IDType(char* select_function) {
 	printf("|   3   | Cinema                            |\n");
 	printf("---------------------------------------------\n");
 	printf("|   4   | Fashion shop                      |\n");
+	printf("---------------------------------------------\n");
+	printf("|   5   | Other                             |\n");
 	printf("---------------------------------------------\n");
 	printf("|   *   | All location                      |\n");
 	printf("---------------------------------------------\n");

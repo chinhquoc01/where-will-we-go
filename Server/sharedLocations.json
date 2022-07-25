@@ -1,3 +1,17 @@
 [
-    
+    {
+        "receiver": "tien",
+        "sender": "test",
+        "sharedList": [
+            "myaoF9"
+        ]
+    },
+    {
+        "receiver": "test",
+        "sender": "tien",
+        "sharedList": [
+            "myaoF9",
+            "eqI36l"
+        ]
+    }
 ]

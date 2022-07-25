@@ -89,5 +89,12 @@
         "id": "JZgFNu",
         "name": "Cho Bach Khoa",
         "type": 5
+    },
+    {
+        "address": "Bach Khoa",
+        "description": "Toa nha hoc",
+        "id": "7Ealyp",
+        "name": "B1 Bach Khoa",
+        "type": 5
     }
 ]

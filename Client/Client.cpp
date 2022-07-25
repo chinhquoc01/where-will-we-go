@@ -77,12 +77,19 @@ int main(int ardc, char *argv[])
 
 			//nhan thong diep
 			ret = recv(client, buff, BUFF_SIZE, 0);
-			buff[ret] = 0;
+			bool haveNoti = false;
+			if (ret == 4) {
+				haveNoti = true;
+				Sleep(1000);
+			}
+			buff[3] = 0;
+
+			//buff[ret] = 0;
 
 			getResponseCode(buff);
 			Sleep(1000);
 			if (strcmp(buff, responseCode.successLogin) == 0) {
-				clientProcess(client, buff, select_function);
+				clientProcess(client, buff, select_function, haveNoti);
 			}
 		}
 	}

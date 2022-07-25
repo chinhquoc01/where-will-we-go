@@ -8,3 +8,5 @@ bool add_to_favourite(string username, string locationId, string sender = "");
 bool backup_favourite(string username);
 
 bool restore_favourite(string username);
+
+bool remove_from_favourite(string username, string locationId);

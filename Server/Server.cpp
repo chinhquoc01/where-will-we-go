@@ -64,6 +64,7 @@ string reject_shared_location(string idLocation, client* client);
 string backup(client* client);
 string restore(client* client);
 bool check_share_notification(client* client);
+string remove_favourite(string idLocation, client* client);
 
 /* userThread - Thread to receive the user message from client*/
 unsigned __stdcall userThread(void *param) {
@@ -157,6 +158,7 @@ int main(int argc, char* argv[])
 	}
 
 	printf("Server started!\n");
+	remove_from_favourite("quocpc1", "guiy7i");
 
 	//Communicate with client
 	sockaddr_in clientAddr;
@@ -351,6 +353,18 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(response);
 			}
 		}
+		else if (messageData[0] == sendMessage.DELETE) {
+			if (messageData.size() != 2) {
+				responses.push_back(responseCode.invalidMessage);
+			}
+			else if (currentClient->username == "") {
+				responses.push_back(responseCode.errorUnauthorize);
+			}
+			else {
+				string response = remove_favourite(messageData[1], currentClient);
+				responses.push_back(response);
+			}
+		}
 		// Get shared list
 		else if (messageData[0] == sendMessage.GETSHARELIST) {
 			if (messageData.size() != 1) {
@@ -450,7 +464,12 @@ string loginAccount(string username, string password, client* client) {
 	for (int i = 0; i < accountList.size(); i++) {
 		if (accountList[i].username == username && accountList[i].password == password) {
 			client->username = username;
-			
+
+			bool isHaveNotification = check_share_notification(client);
+			if (isHaveNotification) {
+				return "110x";
+			}
+
 			return responseCode.successLogin;
 		}
 	}
@@ -589,6 +608,9 @@ string get_shared_locations(client* client) {
 }
 
 string share_location(string idLocation, string receiver, client* client) {
+	if (receiver == client->username) {
+		return responseCode.errorSelfShare;
+	}
 	auto shared = save_shared_location(client->username, receiver, idLocation);
 	if (shared == true) {
 		return responseCode.successShare;
@@ -605,6 +627,16 @@ string save_to_favourite(string idLocation, client* client) {
 	}
 	else {
 		return responseCode.errorExistedLocation;
+	}
+}
+
+string remove_favourite(string idLocation, client* client) {
+	bool removed = remove_from_favourite(client->username, idLocation);
+	if (removed == true) {
+		return responseCode.successDelete;
+	}
+	else {
+		return responseCode.errorDelete;
 	}
 }
 

@@ -55,10 +55,13 @@ void getResponseCode(char* buff) {
 	else if (strcmp(buff, responseCode.successDelete) == 0) {
 		printf("Delete successfull!\n");
 	}
+	else if (strcmp(buff, responseCode.errorDelete) == 0) {
+		printf("Error delete!\n");
+	}
 
 	//Save
 	else if (strcmp(buff, responseCode.successSave) == 0)
-		printf("Save successfull!");
+		printf("Save successfull!\n");
 	else if (strcmp(buff, responseCode.errorExistedLocation) == 0)
 		printf("This location has been save before\n");
 
@@ -67,7 +70,8 @@ void getResponseCode(char* buff) {
 		printf("Share location successfull\n");
 	else if (strcmp(buff, responseCode.notFoundUsername) == 0)
 		printf("Username doesn't exist!\n");
-
+	else if (strcmp(buff, responseCode.errorSelfShare) == 0)
+		printf("Can not share to your account!\n");
 	//Getshareslist
 	else if (strcmp(buff, responseCode.successGetSharedList) == 0)
 		printf("Get data successfull!\n");
@@ -75,7 +79,7 @@ void getResponseCode(char* buff) {
 	else if (strcmp(buff, responseCode.successBackup) == 0) 
 		printf("Backup successfull\n");
 	else if (strcmp(buff, responseCode.errorBackup) == 0)
-		printf("Error backup \n");
+		printf("Error backup!\n");
 
 	//Restore
 	else if (strcmp(buff, responseCode.successRestore) == 0) 
@@ -95,11 +99,11 @@ void getResponseCode(char* buff) {
 		printf("Error reject!\n");
 	//Logout
 	else if (strcmp(buff, responseCode.successLogout) == 0) 
-		printf("Logout successfull\n");
+		printf("Logout successfull!\n");
 
 	//Unauthorize
 	else if (strcmp(buff, responseCode.errorUnauthorize) == 0)
-		printf("Unauthorize\n");
+		printf("Unauthorize!\n");
 	//999
 	else {
 		printf("Message isn't determined!\n");

@@ -129,7 +129,7 @@ bool reject_shared_location(string username, string locationId) {
 		}
 	}
 	json sharedArrayJson = to_json_array_shared_location(allSharedLocation);
-	to_json_file(sharedArrayJson, "sharedLocations.json");
+	to_json_file(sharedArrayJson, SharedLocation::get_file_path());
 	return true;
 }
 

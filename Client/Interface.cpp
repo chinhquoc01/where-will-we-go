@@ -497,7 +497,7 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 				strcat(buff, SEPARATOR_CHAR);
 				char inp[BUFF_SIZE];
 				printf("Add new location\n");
-				printf("(IDtype) Restaurant : 1, Coffee: 2, Cinema: 3, Fashion shop: 4\n");
+				printf("(IDtype) Restaurant: 1, Coffee: 2, Cinema: 3, Fashion shop: 4, Other: 5\n");
 				printf("Name: ");
 
 				fflush(stdin);

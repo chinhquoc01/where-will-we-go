@@ -33,6 +33,8 @@ SOCKET connSock;
 const ResponseCode responseCode;
 const Message sendMessage;
 
+CRITICAL_SECTION cs;
+
 typedef struct {
 	string username = "";
 	string waitingMessage = "";
@@ -160,10 +162,12 @@ int main(int argc, char* argv[])
 	printf("Server started!\n");
 	remove_from_favourite("quocpc1", "guiy7i");
 
+	InitializeCriticalSection(&cs);
 	//Communicate with client
 	sockaddr_in clientAddr;
 	int clientAddrLen = sizeof(clientAddr);
 	while (1) {
+		EnterCriticalSection(&cs);
 		connSock = accept(listenSock, (sockaddr *)& clientAddr, &clientAddrLen);
 		if (connSock == SOCKET_ERROR)
 			printf("Error %d: Cannot permit incoming connection.\n", WSAGetLastError());
@@ -175,11 +179,12 @@ int main(int argc, char* argv[])
 			// Start thread
 			_beginthreadex(0, 0, userThread, (void *)connSock, 0, 0);
 		}
+		LeaveCriticalSection(&cs);
 	}
 
 	//Terminate winsock
 	WSACleanup();
-
+	DeleteCriticalSection(&cs);
 	return 0;
 }
 

@@ -1,0 +1,79 @@
+[
+    {
+        "address": "So 1 Dai Co Viet",
+        "description": "Truong dai hoc Khoa hoc Ky thuat hang dau VN",
+        "id": "fjpQFl",
+        "name": "Dai hoc Bach Khoa Ha Noi",
+        "type": 5
+    },
+    {
+        "address": "So 1 Le Duan",
+        "description": "Khu vui choi",
+        "id": "AH03WO",
+        "name": "Cong vien Thong Nhat",
+        "type": 5
+    },
+    {
+        "address": "Ngo 37 Le Thanh Nghi",
+        "description": "Cua hang tien loi",
+        "id": "eqI36l",
+        "name": "Circle K",
+        "type": 5
+    },
+    {
+        "address": "So 50 Giai Phong",
+        "description": "Benh vien",
+        "id": "870PxV",
+        "name": "Benh vien Bach Mai",
+        "type": 5
+    },
+    {
+        "address": "91 Tran Dai Nghia",
+        "description": "Cafe",
+        "id": "myaoF9",
+        "name": "Highlands Coffee",
+        "type": 2
+    },
+    {
+        "address": "95 Tran Dai Nghia",
+        "description": "Cua hang an uong",
+        "id": "uoac91",
+        "name": "Mi cay Seoul",
+        "type": 1
+    },
+    {
+        "address": "7 Dien Bien",
+        "description": "Rap phim",
+        "id": "nap19a",
+        "name": "Rap phim Thanh Giong",
+        "type": 3
+    },
+    {
+        "address": "155 Chua Boc",
+        "description": "Cua hang quan ao nam",
+        "id": "oaf73v",
+        "name": "Menswear",
+        "type": 4
+    },
+    {
+        "address": "7 Dao Duy Anh",
+        "description": "Khach san sang trong",
+        "id": "nc84ej",
+        "name": "Khach san Kim Lien",
+        "type": 5
+    },
+    {
+        "address": "Hai Ba Trung",
+        "description": "Chua",
+        "id": "nci019",
+        "name": "Chua Lien Phai",
+        "type": 5
+    },
+    {
+        "address": "A1 Le Thanh Nghi",
+        "description": "San van dong",
+        "id": "6sFFx1",
+        "name": "San van dong Bach Khoa",
+        "type": 5
+    }
+]

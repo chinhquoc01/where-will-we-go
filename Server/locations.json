@@ -75,5 +75,26 @@
         "id": "6sFFx1",
         "name": "San van dong Bach Khoa",
         "type": 5
+    },
+    {
+        "address": "Giai Phong",
+        "description": "Truong dai hoc",
+        "id": "JZgFNu",
+        "name": "Dai hoc Kinh te Quoc dan",
+        "type": 5
+    },
+    {
+        "address": "Le Thanh Nghi",
+        "description": "Cho",
+        "id": "JZgFNu",
+        "name": "Cho Bach Khoa",
+        "type": 5
+    },
+    {
+        "address": "Bach Khoa",
+        "description": "Toa nha hoc",
+        "id": "7Ealyp",
+        "name": "B1 Bach Khoa",
+        "type": 5
     }
 ]

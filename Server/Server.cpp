@@ -521,7 +521,7 @@ string addLocation(string name, string type, string address, string description,
 	if (name == "" || type == "" || address == "" || description == "") {
 		return responseCode.errorInvalidInput;
 	}
-	if (stoi(type) < 1 || stoi(type) > 4) {
+	if (stoi(type) < 1 || stoi(type) > 5) {
 		return responseCode.errorInvalidInput;
 	}
 	getLocationData();

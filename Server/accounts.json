@@ -9,6 +9,10 @@
     },
     {
         "password": "123456",
-        "username": "tiennh"
+        "username": "tien"
+    },
+    {
+        "password": "654321",
+        "username": "test"
     }
 ]

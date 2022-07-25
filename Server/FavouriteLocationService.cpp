@@ -18,6 +18,8 @@ vector<Location> get_favourite_list(string username, string type) {
 	}
 }
 
+
+
 /*
 Người dùng tự thêm địa điểm vào danh sách yêu thích
 */

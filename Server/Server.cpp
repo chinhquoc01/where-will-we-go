@@ -579,7 +579,7 @@ string logout_account(client* client) {
 * @param client: client send message
 * @return response code with each case
 */
-string addLocation(string name, string type, string address, string description, client* client) {
+string add_location(string name, string type, string address, string description, client* client) {
 	if (name == "" || type == "" || address == "" || description == "") {
 		return responseCode.errorInvalidInput;
 	}

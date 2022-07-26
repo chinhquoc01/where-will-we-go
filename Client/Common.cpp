@@ -160,7 +160,6 @@ vector<string> recvLocationData(SOCKET client, char* buff) {
 	else if (strlen(buff) > 0) {
 		buff[ret] = 0;
 		getResponseCode(buff);
-		Sleep(1000);
 	}
 
 	string responseCodeGetLocation(buff);

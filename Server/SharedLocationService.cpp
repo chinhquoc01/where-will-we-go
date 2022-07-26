@@ -45,6 +45,13 @@ map<string, vector<string>> get_shared_location_by_username(string username, str
 	return res;
 }
 
+/*
+* Save id of location shared into shared list
+* @param sender: account shared location
+* @param receiver: account is shared
+* @param locationId: id of location is shared
+* @return True if success, false if fail
+*/
 bool save_shared_location(string sender, string receiver, string locationId) {
 	// Kiểm tra recevier
 	if (find_account_by_username(receiver) == false) {

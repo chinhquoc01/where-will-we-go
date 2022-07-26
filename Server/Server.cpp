@@ -20,7 +20,7 @@
 
 #pragma comment (lib,"ws2_32.lib")
 
-#define SERVER_ADDR "127.0.0.1"
+#define SERVER_ADDR "192.168.1.190"
 #define BUFF_SIZE 2048
 
 int clientPort;
@@ -531,6 +531,15 @@ string logoutAccount(client* client) {
 
 }
 
+/*
+* add a new location
+* @param name: name of location
+* @param type: type of location
+* @param address: address of location
+* @param description: description of location
+* @param client: client send message
+* @return response code with each case
+*/
 string addLocation(string name, string type, string address, string description, client* client) {
 	if (name == "" || type == "" || address == "" || description == "") {
 		return responseCode.errorInvalidInput;
@@ -649,6 +658,11 @@ string save_to_favourite(string idLocation, client* client) {
 	}
 }
 
+/*
+* remove a loaction in list of favourite
+* @param name: id of client need remove in list of favourite
+* @return delete success or not?
+*/
 string remove_favourite(string idLocation, client* client) {
 	bool removed = remove_from_favourite(client->username, idLocation);
 	if (removed == true) {

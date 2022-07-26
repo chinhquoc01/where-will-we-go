@@ -103,7 +103,6 @@ void UI_register_login(char* buff, char* select_function) {
 *
 * @param select_function: selected function
 */
-
 void getSharedList(vector<string> locationData, char* select_function) {
 	system("cls");
 

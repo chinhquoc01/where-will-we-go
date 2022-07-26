@@ -10,12 +10,13 @@
 #include "iostream"
 #include "../Server/Location.h"
 
-#define SERVER_PORT 5500 
-#define SERVER_ADDR "127.0.0.1" 
 #define BUFF_SIZE 2048 
 #define SELECT_SIZE 128
 #define SEPARATOR_CHAR "$"
 #define END_MESS "\r\n"
+
+char* SERVER_ADDR;
+int SERVER_PORT;
 
 using namespace std;
 
@@ -25,8 +26,24 @@ const Message message;
 vector<Location> locationList;
 
 
-int main(int ardc, char *argv[])
+int main(int argc, char *argv[])
 {
+	// Get server address and server port from command line parameter
+	if (argc < 3) {
+		cout << "[-] Not found server address.";
+		return 0;
+	}
+	try
+	{
+		SERVER_ADDR = argv[1];
+		SERVER_PORT = stoi(argv[2]);
+	}
+	catch (const exception&)
+	{
+		cout << "[-] Invalid server address";
+		return 0;
+	}
+
 	// Inittiate WinSock
 	WSADATA wsaData;
 	WORD wVersion = MAKEWORD(2, 2);

@@ -42,21 +42,22 @@ typedef struct {
 	vector<string> listData;
 } client;
 
-// store account list get from account.txt
+// store account list get from accounts.json
 vector<Account> accountList;
 
+// store account list get from locations.json
 vector<Location> locationList;
 
 // List function
-void getAccountData();
+void get_account_data();
 vector<string> split(const string &s, char delim);
 vector<string> process(int ret, string buff, client* currentClient);
-string loginAccount(string username, string password, client* client);
-string registerAccount(string username, string password, client* client);
-string logoutAccount(client* client);
-void getLocationData();
-string getLocation(string type, client* client);
-string addLocation(string name, string type, string address, string description, client* client);
+string login_account(string username, string password, client* client);
+string register_account(string username, string password, client* client);
+string logout_account(client* client);
+void get_location_data();
+string get_location(string type, client* client);
+string add_location(string name, string type, string address, string description, client* client);
 string get_favourite_locations(string type, client* client);
 string get_shared_locations(client* client);
 string share_location(string idLocation, string receiver, client* client);
@@ -68,7 +69,10 @@ string restore(client* client);
 bool check_share_notification(client* client);
 string remove_favourite(string idLocation, client* client);
 
-/* userThread - Thread to receive the user message from client*/
+/*
+* @function userThread: function toreceive the user message from client
+*
+*/
 unsigned __stdcall userThread(void *param) {
 	char buff[BUFF_SIZE];
 	int ret;
@@ -203,18 +207,22 @@ int main(int argc, char* argv[])
 }
 
 /*
-* @function getAccountData: function to get account data from file account.json and store in account list
+* @function get_account_data: function to get account data from file account.json and store in accountList
 *
 * @return no return value
 */
-void getAccountData() {
+void get_account_data() {
 	// Get data account from account.json
 	accountList.clear();
 	accountList = get_all_accounts_from_json(Account::get_file_path());
 }
 
-
-void getLocationData() {
+/*
+* @function get_location_data: function to get account data from file location.json and store in locationList
+*
+* @return no return value
+*/
+void get_location_data() {
 	locationList.clear();
 	locationList = get_all_locations_from_json(Location::get_file_path());
 }
@@ -300,7 +308,7 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back("999");
 			}
 			else {
-				string response = loginAccount(messageData[1], messageData[2], currentClient);
+				string response = login_account(messageData[1], messageData[2], currentClient);
 				responses.push_back(response);
 			}
 		}
@@ -313,7 +321,7 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back("999");
 			}
 			else {
-				string response = registerAccount(messageData[1], messageData[2], currentClient);
+				string response = register_account(messageData[1], messageData[2], currentClient);
 				responses.push_back(response);
 			}
 		}
@@ -329,7 +337,7 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(responseCode.errorUnauthorize);
 			}
 			else {
-				string response = getLocation(messageData[1], currentClient);
+				string response = get_location(messageData[1], currentClient);
 				responses.push_back(response);
 			}
 		}
@@ -342,7 +350,7 @@ vector<string> process(int ret, string buff, client* currentClient) {
 				responses.push_back(responseCode.errorUnauthorize);
 			}
 			else {
-				string response = addLocation(messageData[1], messageData[2], messageData[3], messageData[4], currentClient);
+				string response = add_location(messageData[1], messageData[2], messageData[3], messageData[4], currentClient);
 				responses.push_back(response);
 			}
 		}
@@ -456,7 +464,7 @@ vector<string> process(int ret, string buff, client* currentClient) {
 		}
 		// LOGOUT
 		else if (messageData[0] == sendMessage.LOGOUT) {
-			string response = logoutAccount(currentClient);
+			string response = logout_account(currentClient);
 			responses.push_back(response);
 		}
 		else {
@@ -468,7 +476,18 @@ vector<string> process(int ret, string buff, client* currentClient) {
 }
 
 
-string loginAccount(string username, string password, client* client) {
+/*
+* @function login_account: function to login user with client
+*
+* @param username: string contain user of user to login
+*
+* @param password: string contain password of user to login
+*
+* @param client: client to login
+*
+* @return response code
+*/
+string login_account(string username, string password, client* client) {
 	// Check the account is exist or not, locked or not
 	if (username == "") {
 		return responseCode.invalidMessage;
@@ -478,7 +497,7 @@ string loginAccount(string username, string password, client* client) {
 		return responseCode.errorAlreadyLoggedIn;
 	}
 
-	getAccountData();
+	get_account_data();
 
 	for (int i = 0; i < accountList.size(); i++) {
 		if (accountList[i].username == username && accountList[i].password == password) {
@@ -495,8 +514,18 @@ string loginAccount(string username, string password, client* client) {
 	return responseCode.errorInvalidAccount;
 }
 
-
-string registerAccount(string username, string password, client* client) {
+/*
+* @function register_account: function to register a new user
+*
+* @param username: string contain user of new user to register
+*
+* @param password: string contain password of user to register
+*
+* @param client: client to login
+*
+* @return response code
+*/
+string register_account(string username, string password, client* client) {
 	// Check the account is exist or not, locked or not
 	if (username == "") {
 		return responseCode.invalidMessage;
@@ -506,7 +535,11 @@ string registerAccount(string username, string password, client* client) {
 		return responseCode.errorAlreadyLoggedIn;
 	}
 
-	getAccountData();
+	if (trim(password) == "") {
+		return responseCode.errorInvalidInput;
+	}
+
+	get_account_data();
 
 	for (int i = 0; i < accountList.size(); i++) {
 		if (accountList[i].username == username) {
@@ -520,8 +553,14 @@ string registerAccount(string username, string password, client* client) {
 	return responseCode.successRegister;
 }
 
-
-string logoutAccount(client* client) {
+/*
+* @function logout_account: function to logout
+*
+* @param client: client to logout
+*
+* @return response code
+*/
+string logout_account(client* client) {
 	if (client->username == "") {
 		return responseCode.errorUnauthorize;
 	}
@@ -531,14 +570,14 @@ string logoutAccount(client* client) {
 
 }
 
-string addLocation(string name, string type, string address, string description, client* client) {
+string add_location(string name, string type, string address, string description, client* client) {
 	if (name == "" || type == "" || address == "" || description == "") {
 		return responseCode.errorInvalidInput;
 	}
 	if (stoi(type) < 1 || stoi(type) > 5) {
 		return responseCode.errorInvalidInput;
 	}
-	getLocationData();
+	get_location_data();
 
 	Location l(name, stoi(type), description, address);
 	locationList.push_back(l);
@@ -549,8 +588,8 @@ string addLocation(string name, string type, string address, string description,
 	return responseCode.successAdd;
 }
 
-string getLocation(string type, client* client) {
-	getLocationData();
+string get_location(string type, client* client) {
+	get_location_data();
 	client->listData.clear();
 	if (type == "*") {
 		string responseListData = "";
@@ -592,6 +631,13 @@ string get_favourite_locations(string type, client* client) {
 	return responseCode.successGetFavorite;
 }
 
+/*
+* @function get_shared_locations: function to get all shared location a user received
+*
+* @param client: currentClient
+*
+* @return response code
+*/
 string get_shared_locations(client* client) {
 	locationList.clear();
 	client->listData.clear();
@@ -659,6 +705,15 @@ string remove_favourite(string idLocation, client* client) {
 	}
 }
 
+/*
+* @function accept_shared_location: function to get accept a location was shared location by a friend
+*
+* @param idLocation: string contain id of location accept
+*
+* @param client: currentClient
+*
+* @return response code
+*/
 string accept_shared_location(string idLocation, client* client) {
 	bool accepted = accept_shared_location(client->username, idLocation);
 	if (accepted == true) {
@@ -669,6 +724,15 @@ string accept_shared_location(string idLocation, client* client) {
 	}
 }
 
+/*
+* @function reject_shared_location: function to get reject a location was shared location by a friend
+*
+* @param idLocation: string contain id of location reject
+*
+* @param client: currentClient
+*
+* @return response code
+*/
 string reject_shared_location(string idLocation, client* client) {
 	bool rejected = reject_shared_location(client->username, idLocation);
 	if (rejected == true) {
@@ -699,6 +763,13 @@ string restore(client* client) {
 	}
 }
 
+/*
+* @function check_share_notification: function to check user have been shared location by friend or not
+*
+* @param client: current client
+*
+* @return bool
+*/
 bool check_share_notification(client* client) {
 	return check_have_shared_location(client->username);
 }

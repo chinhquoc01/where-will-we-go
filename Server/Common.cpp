@@ -40,12 +40,17 @@ void to_json_file(json j, string path) {
 	o << std::setw(4) << j << std::endl;
 }
 
-//json to_json_array_from_vector(vector<BaseClass*> v) {
-//	auto j = json::array();
-//	for (auto l : v)
-//	{
-//		auto jsonObj = (*l).to_json_obj();
-//		j.push_back(jsonObj);
-//	}
-//	return j;
-//}
+
+string trim(const string &s){
+	auto start = s.begin();
+	while (start != s.end() && isspace(*start)) {
+		start++;
+	}
+
+	auto end = s.end();
+	do {
+		end--;
+	} while (distance(start, end) > 0 && isspace(*end));
+
+	return string(start, end + 1);
+}

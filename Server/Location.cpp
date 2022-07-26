@@ -30,7 +30,7 @@ Location::Location(string _name, int _type, string _description, string _address
 }
 
 /*
-Method của class, chuyển object location thành json object
+* Method get json object
 */
 json Location::to_json_obj()
 {
@@ -44,7 +44,9 @@ json Location::to_json_obj()
 }
 
 /*
-Chuyển từ vector location sang dạng json object
+* Get json object from vector of location
+* @param v vector of locations
+* @return json object
 */
 json to_json_array_location(vector<Location> v)
 {
@@ -58,7 +60,9 @@ json to_json_array_location(vector<Location> v)
 }
 
 /*
-Đọc từ file json, trả về vector chứa location
+* Read file json then return vector of location
+* @param path Path to json file
+* @return vector of location
 */
 vector<Location> get_all_locations_from_json(string path)
 {
@@ -74,7 +78,10 @@ vector<Location> get_all_locations_from_json(string path)
 }
 
 /*
-Lấy location từ id list
+* Get location object from id
+* @param locations Vector of locations
+* @param idList Vector of location id
+* @return Vector of location from @idList
 */
 vector<Location> get_location_from_id_list(vector<Location> locations, vector<string> idList)
 {

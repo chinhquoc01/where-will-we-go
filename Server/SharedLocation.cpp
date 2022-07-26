@@ -1,5 +1,8 @@
 #include "SharedLocation.h"
 
+/*
+* Get json object
+*/
 json SharedLocation::to_json_obj() {
 	auto jsonObj = json::object();
 	jsonObj["sender"] = sender;
@@ -8,6 +11,11 @@ json SharedLocation::to_json_obj() {
 	return jsonObj;
 }
 
+/*
+* Get json array from vector of shared location
+* @param v vector of shared location
+* @return json array
+*/
 json to_json_array_shared_location(vector<SharedLocation> v) {
 	auto j = json::array();
 	for (auto l : v)
@@ -18,6 +26,11 @@ json to_json_array_shared_location(vector<SharedLocation> v) {
 	return j;
 }
 
+/*
+* Get all shared location from json file
+* @param path Path to json file
+* @return Vector of sharedLocation
+*/
 vector<SharedLocation> get_all_shared_locations_from_json(string path) {
 	json j = from_json_file(path);
 	vector<SharedLocation> res;

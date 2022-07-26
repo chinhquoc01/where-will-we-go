@@ -1,5 +1,11 @@
 ﻿#include "FavouriteLocationService.h"
 
+/*
+* Get favourite list 
+* @param username username 
+* @param type Type of location
+* @return Vector contains list of locations
+*/
 vector<Location> get_favourite_list(string username, string type) {
 	auto favLocationIds = get_favourite_location_id(FavouriteLocation::get_file_path(), username);
 	auto locations = get_all_locations_from_json(Location::get_file_path());
@@ -21,7 +27,11 @@ vector<Location> get_favourite_list(string username, string type) {
 
 
 /*
-Người dùng tự thêm địa điểm vào danh sách yêu thích
+* Add a location to favourite list
+* @param username Username
+* @param locationId Location id of favourite place
+* @param sender Username of user who share this place (default is "", which means users add to favourite by themself)
+* @return True if success, false if fail
 */
 bool add_to_favourite(string username, string locationId, string sender) {
 	// Lấy vector favourite location từ file favourite
@@ -118,6 +128,12 @@ bool restore_favourite(string username) {
 	}
 }
 
+/*
+* Remove a location from favourite list
+* @param username Username 
+* @param locationId Id of location need to remove from favourite list
+* @return True 
+*/
 bool remove_from_favourite(string username, string locationId) {
 	auto favouriteLocations = get_all_favourite_locations_from_json(FavouriteLocation::get_file_path());
 	bool removed = false;

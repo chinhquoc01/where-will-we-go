@@ -597,6 +597,12 @@ string add_location(string name, string type, string address, string description
 	return responseCode.successAdd;
 }
 
+/*
+* get location
+* @param type: type of location
+* @param client: client send message
+* @return response code with each case
+*/
 string get_location(string type, client* client) {
 	get_location_data();
 	client->listData.clear();
@@ -623,6 +629,12 @@ string get_location(string type, client* client) {
 	}
 }
 
+/*
+* get favorite location
+* @param type: type of location
+* @param client: client send message
+* @return response code with each case
+*/
 string get_favourite_locations(string type, client* client) {
 	locationList.clear();
 	client->listData.clear();
@@ -681,6 +693,13 @@ string get_shared_locations(client* client) {
 	return responseCode.successGetSharedList;
 }
 
+/*
+* share location to a another user
+* @param idLocation: id of location
+* @param receiver: user receive shared location
+* @param client: client send message
+* @return response code with each case
+*/
 string share_location(string idLocation, string receiver, client* client) {
 	if (receiver == client->username) {
 		return responseCode.errorSelfShare;
@@ -694,6 +713,12 @@ string share_location(string idLocation, string receiver, client* client) {
 	}
 }
 
+/*
+* save location to favourite location
+* @param idLocation: id of location
+* @param client: client send message
+* @return response code with each case
+*/
 string save_to_favourite(string idLocation, client* client) {
 	bool added = add_to_favourite(client->username, idLocation);
 	if (added == true) {
@@ -757,6 +782,11 @@ string reject_shared_location(string idLocation, client* client) {
 	}
 }
 
+/*
+* backup favourite location
+* @param client: client send message
+* @return response code with each case
+*/
 string backup(client* client) {
 	bool backuped = backup_favourite(client->username);
 	if (backuped == true) {
@@ -767,6 +797,11 @@ string backup(client* client) {
 	}
 }
 
+/*
+* restore favourite location
+* @param client: client send message
+* @return response code with each case
+*/
 string restore(client* client) {
 	bool restored = restore_favourite(client->username);
 	if (restored == true) {

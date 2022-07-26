@@ -77,6 +77,12 @@ bool add_to_favourite(string username, string locationId, string sender) {
 	return true;
 }
 
+
+/*
+* Backup favourite place of username
+* @param username Username of user whose data need to backup
+* @return True if success, false if fail
+*/
 bool backup_favourite(string username) {
 	try
 	{
@@ -103,6 +109,11 @@ bool backup_favourite(string username) {
 	}
 }
 
+/*
+* Restore favourite data of specific username
+* @param username Username of user who need restore data
+* @return True if success, false if fail
+*/
 bool restore_favourite(string username) {
 	try
 	{
@@ -130,9 +141,9 @@ bool restore_favourite(string username) {
 
 /*
 * Remove a location from favourite list
-* @param username Username 
+* @param username Username
 * @param locationId Id of location need to remove from favourite list
-* @return True 
+* @return True if success, false if not
 */
 bool remove_from_favourite(string username, string locationId) {
 	auto favouriteLocations = get_all_favourite_locations_from_json(FavouriteLocation::get_file_path());

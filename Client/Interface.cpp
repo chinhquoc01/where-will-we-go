@@ -16,12 +16,19 @@ const Message message;
 
 using namespace std;
 
-//Input username, password
+/*
+* @function input: input account and password
+*
+* @param buff: use to send server
+*
+* @param select_function: selected function
+*/
 void input(char* buff, char* select_function) {
 	char temp[BUFF_SIZE];
 
 	system("cls");
 
+	// Select function
 	if (strcmp(select_function, "1") == 0) {
 		strcpy(buff, message.REGISTER);
 		strcat(buff, SEPARATOR_CHAR);
@@ -34,12 +41,14 @@ void input(char* buff, char* select_function) {
 		printf("LOGIN\n");
 	}
 
+	// Input sername
 	printf("Username: ");
 	fflush(stdin);
 	gets_s(temp, BUFF_SIZE);
 	strcat(buff, temp);
 	strcat(buff, SEPARATOR_CHAR);
 
+	// Input password
 	printf("Password: ");
 	fflush(stdin);
 	gets_s(temp, BUFF_SIZE);
@@ -47,10 +56,17 @@ void input(char* buff, char* select_function) {
 	strcat(buff, END_MESS);
 }
 
-//Register-Login nterface
+/*
+* @function UI_register_login: display the registration and login interface
+*
+* @param buff: use to send server
+*
+* @param select_function: selected function
+*/
 void UI_register_login(char* buff, char* select_function) {
 	system("cls");
 
+	// Print interface
 	printf("---------------------------------------------\n");
 	printf("| NUMBER|             FUNCTION              |\n");
 	printf("---------------------------------------------\n");
@@ -61,6 +77,7 @@ void UI_register_login(char* buff, char* select_function) {
 	printf("|   3   | Exit                              |\n");
 	printf("---------------------------------------------\n");
 
+	// Select function
 	printf("Enter number to select function: ");
 	fflush(stdin);
 	gets_s(select_function, SELECT_SIZE);
@@ -79,7 +96,14 @@ void UI_register_login(char* buff, char* select_function) {
 	}
 }
 
-// Get shared list
+/*
+* @function getSharedList: display shared list
+*
+* @param locationData: data of location client reived
+*
+* @param select_function: selected function
+*/
+
 void getSharedList(vector<string> locationData, char* select_function) {
 	system("cls");
 
@@ -95,6 +119,7 @@ void getSharedList(vector<string> locationData, char* select_function) {
 		if (senderSizeMax < locationData[i + 4].size()) senderSizeMax = locationData[i + 4].size();
 	}
 
+	// Print header
 	printf("Shared list\n");
 	printf("(IDtype) Restaurant : 1, Coffee: 2, Cinema: 3, Fashion shop: 4, Other: 5\n");
 	printf("-------------------------------------------------------------------\n");
@@ -113,14 +138,16 @@ void getSharedList(vector<string> locationData, char* select_function) {
 		for (int i = 0; i < (desSizeMax - 11); i++) cout << " ";
 	cout << "    ";
 	cout << "ADDRESS" << endl;
+
+	// Print location
 	int count = 1;
 	for (int i = 0; i < locationData.size()/6; i++) {
-		//print number
+		// Print number
 		cout << "  " << count;
 		if (count >= 10) cout << "      ";
 		else cout << "       ";
 
-		//print sender
+		// Print sender
 		cout << locationData[(count - 1) * 6 + 5];
 		if (senderSizeMax < 6)
 			for (int j = 0; j < (6 - locationData[(count - 1) * 6 + 5].size()); j++)
@@ -130,10 +157,12 @@ void getSharedList(vector<string> locationData, char* select_function) {
 				for (int j = 0; j < (senderSizeMax - locationData[(count - 1) * 6 + 5].size()); j++)
 					cout << " ";
 		cout << "    ";
-		//print id
+
+		// Print id
 		cout << " " << locationData[(count - 1) * 6];
 		cout << "      ";
-		//print name
+
+		// Print name
 		cout << locationData[(count - 1) * 6 + 1];
 		if (nameSizeMax < 4)
 			for (int j = 0; j < (4 - locationData[(count - 1) * 6 + 1].size()); j++)
@@ -143,10 +172,12 @@ void getSharedList(vector<string> locationData, char* select_function) {
 				for (int j = 0; j < (nameSizeMax - locationData[(count - 1) * 6 + 1].size()); j++)
 					cout << " ";
 		cout << "      ";
-		//print idtype
+
+		// Print idtype
 		cout << locationData[(count - 1) * 6 + 2];
 		cout << "       ";
-		//print description
+
+		// Print description
 		cout << locationData[(count - 1) * 6 + 3];
 		if (desSizeMax < 11)
 			for (int j = 0; j < (11 - locationData[(count - 1) * 6 + 3].size()); j++)
@@ -156,7 +187,8 @@ void getSharedList(vector<string> locationData, char* select_function) {
 				for (int j = 0; j < (desSizeMax - locationData[(count - 1) * 6 + 3].size()); j++)
 					cout << " ";
 		cout << "    ";
-		//print address
+
+		// Print address
 		cout << locationData[(count - 1) * 6 + 4];
 		cout << endl;
 		count++;
@@ -164,7 +196,13 @@ void getSharedList(vector<string> locationData, char* select_function) {
 	printf("-------------------------------------------------------------------\n");
 }
 
-//Get list of location
+/*
+* @function getLocation: display list of locaion
+*
+* @param locationData: data of location client reived
+*
+* @param select_function: selected function
+*/
 void getLocation(vector<string> locationData, char* select_function) {
 	system("cls");
 
@@ -179,6 +217,7 @@ void getLocation(vector<string> locationData, char* select_function) {
 		if (desSizeMax < locationData[i + 2].size()) desSizeMax = locationData[i + 2].size();
 	}
 
+	// Print header
 	if (strcmp(select_function, "*") == 0) cout << "List of all location" << endl;
 	else {
 		int key = atoi(select_function);
@@ -189,6 +228,7 @@ void getLocation(vector<string> locationData, char* select_function) {
 		case 4: cout << "List of fashion shop location" << endl; break;
 		}
 	}
+
 	printf("(IDtype) Restaurant : 1, Coffee: 2, Cinema: 3, Fashion shop: 4, Other: 5\n");
 	printf("-------------------------------------------------------------------\n");
 	cout << "NUMBER      ID        NAME";
@@ -204,16 +244,20 @@ void getLocation(vector<string> locationData, char* select_function) {
 	}
 	cout << "    ";
 	cout << "ADDRESS" << endl;
+	
+	// Print location
 	int count = 1;
 	for (int i = 0; i < locationData.size()/5; i++) {
-		//print number
+		// Print number
 		cout << "  " << count;
 		if (count >= 10) cout << "    ";
 		else cout << "     ";
-		//print id
+
+		// Print id
 		cout << "  " << locationData[(count-1)*5];
 		cout << "      ";
-		//print name
+
+		// Print name
 		cout << locationData[(count-1)*5+1];
 		if (nameSizeMax < 4)
 			for (int j = 0; j < (4 - locationData[(count-1)*5+1].size()); j++)
@@ -223,10 +267,12 @@ void getLocation(vector<string> locationData, char* select_function) {
 				for (int j = 0; j < (nameSizeMax - locationData[(count-1)*5+1].size()); j++)
 					cout << " ";
 		cout << "      ";
-		//print idtype
+
+		// Print idtype
 		cout << locationData[(count-1)*5+2];
 		cout << "       ";
-		//print description
+
+		// Print description
 		cout << locationData[(count-1)*5+3];
 		if (desSizeMax < 11)
 			for (int j = 0; j < (11 - locationData[(count - 1) * 5 + 3].size()); j++)
@@ -236,7 +282,8 @@ void getLocation(vector<string> locationData, char* select_function) {
 				for (int j = 0; j < (desSizeMax - locationData[(count-1)*5+3].size()); j++)
 					cout << " ";
 		cout << "    ";
-		//print address
+
+		// Print address
 		cout << locationData[(count-1)*5+4];
 		cout << endl;
 		count++;
@@ -244,7 +291,11 @@ void getLocation(vector<string> locationData, char* select_function) {
 	printf("-------------------------------------------------------------------\n");
 }
 
-//Select IDType interface
+/*
+* @function IDType: select id type
+*
+* @param select_function: selected function
+*/
 void IDType(char* select_function) {
 	printf("---------------------------------------------\n");
 	printf("| IDType|               TYPE                |\n");
@@ -270,7 +321,18 @@ void IDType(char* select_function) {
 	
 }
 
-//fuction interface
+/*
+* @function clientProcess: process all function
+*
+* @param client: socket of client
+*
+* @param buff: use to send or receive
+*
+* @param select_function: selected function
+*
+* @param haveNoti: check account have notification?
+*
+*/
 void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNoti) {
 	while (1) {
 		if (strcmp(select_function, "7") == 0) break;
@@ -304,8 +366,9 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 
 		int key = atoi(select_function);
 		switch (key) {
-			case 1: {
 
+			// See list of location
+			case 1: {
 				while (1) {
 					system("cls");
 					printf("See list of location\n");
@@ -329,14 +392,18 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 					//recv
 					vector<string> locationData = recvLocationData(client, buff);
 					getLocation(locationData, select_function);
+
 					if (locationData.size() == 1 && locationData[0] == "") continue;
+
 					while (1) {
 						char tmp[SELECT_SIZE];
+
 						printf("0. Comeback\n");
 						printf("1. Enter number of location: ");
 						fflush(stdin);
 						gets_s(tmp);
 						printf("---------------------------------------\n");
+
 						if (strcmp(tmp, "0") == 0) break;
 						else if (isdigit(*tmp) == 0) printf("Location doesn't existed!\n");
 						else {
@@ -344,6 +411,7 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 							else {
 								while (1) {
 									char tmp1[SELECT_SIZE];
+
 									printf("1. Save\n");
 									printf("2. Shared\n");
 									printf("0. Comeback\n");
@@ -351,14 +419,13 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 									fflush(stdin);
 									gets_s(tmp1);
 
-
 									if (strcmp(tmp1, "1") == 0) {
 										strcpy(buff, message.SAVE);
 										strcat(buff, SEPARATOR_CHAR);
-
 										strcat(buff, locationData[(atoi(tmp) - 1) * 5].c_str());
 										strcat(buff, END_MESS);
 										printf("---------------------------------------\n");
+
 										send(client, buff, strlen(buff), 0);
 
 										int ret = recv(client, buff, BUFF_SIZE, 0);
@@ -372,6 +439,7 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 										strcat(buff, SEPARATOR_CHAR);
 										strcat(buff, locationData[(atoi(tmp) - 1) * 5].c_str());
 										strcat(buff, SEPARATOR_CHAR);
+
 										printf("Share to: ");
 										fflush(stdin);
 										gets_s(tmp2);
@@ -382,9 +450,11 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 
 										int ret = recv(client, buff, BUFF_SIZE, 0);
 										buff[ret] = 0;
+
 										getResponseCode(buff);
 										printf("---------------------------------------\n");
 										Sleep(1000);
+
 										if (strcmp(buff, responseCode.successShare) == 0) break;
 										else if (strcmp(buff, responseCode.notFoundUsername) == 0) continue;
 										else if (strcmp(buff, responseCode.errorSelfShare) == 0) continue;
@@ -409,6 +479,8 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 					
 				} break;
 			}
+
+			// See list of favourite location
 			case 2: {
 				system("cls");
 
@@ -491,16 +563,20 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 					
 				} break;
 			}
+
+			// Add new location
 			case 3: {
 				system("cls");
 
 				strcpy(buff, message.ADD);
 				strcat(buff, SEPARATOR_CHAR);
+				
 				char inp[BUFF_SIZE];
+
 				printf("Add new location\n");
 				printf("(IDtype) Restaurant: 1, Coffee: 2, Cinema: 3, Fashion shop: 4, Other: 5\n");
+				
 				printf("Name: ");
-
 				fflush(stdin);
 				gets_s(inp);
 				strcat(buff, inp);
@@ -532,6 +608,8 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 				getResponseCode(buff);
 				Sleep(1000);
 			} break;
+
+			// See shared list
 			case 4: {
 				while (1) {
 					system("cls");
@@ -543,14 +621,20 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 
 					//recv
 					vector<string> locationData = recvLocationData(client, buff);
+
 					getSharedList(locationData, select_function);
+
 					if (locationData.size() == 1 && locationData[0] == "") break;
+
 					char tmp[SELECT_SIZE];
+
 					printf("0. Comeback\n");
 					printf("1. Enter number of location: ");
 					fflush(stdin);
 					gets_s(tmp);
+
 					printf("---------------------------------------\n");
+
 					if (strcmp(tmp, "0") == 0) break;
 					else if (isdigit(*tmp) == 0) printf("Location doesn't existed!\n");
 					else {
@@ -558,6 +642,7 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 						else {
 							while (1) {
 								char tmp1[SELECT_SIZE];
+
 								printf("0. Comeback\n");
 								printf("1. Accept\n");
 								printf("2. Reject\n");
@@ -569,11 +654,10 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 								if (strcmp(tmp1, "1") == 0) {
 									strcpy(buff, message.ACCEPT);
 									strcat(buff, SEPARATOR_CHAR);
-
 									strcat(buff, locationData[(atoi(tmp) - 1) * 6].c_str());
 									strcat(buff, END_MESS);
-
 									printf("---------------------------------------\n");
+
 									send(client, buff, strlen(buff), 0);
 
 									int ret = recv(client, buff, BUFF_SIZE, 0);
@@ -584,11 +668,10 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 								else if (strcmp(tmp1, "2") == 0) {
 									strcpy(buff, message.REJECT);
 									strcat(buff, SEPARATOR_CHAR);
-
 									strcat(buff, locationData[(atoi(tmp) - 1) * 6].c_str());
 									strcat(buff, END_MESS);
-
 									printf("---------------------------------------\n");
+
 									send(client, buff, strlen(buff), 0);
 
 									int ret = recv(client, buff, BUFF_SIZE, 0);
@@ -612,6 +695,8 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 				}
 				
 			} break;
+
+			// Backup
 			case 5: {
 				system("cls");
 
@@ -627,6 +712,8 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 				getResponseCode(buff);
 				Sleep(1000);
 			} break;
+
+			//Restore
 			case 6: {
 				system("cls");
 
@@ -641,6 +728,8 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 				getResponseCode(buff);
 				Sleep(1000);
 			} break;
+
+			//Logout
 			case 7: {
 				system("cls");
 
@@ -655,6 +744,7 @@ void clientProcess(SOCKET client, char* buff, char* select_function, bool haveNo
 				getResponseCode(buff);
 				Sleep(1000);
 			} break;
+
 			default: {
 				printf("Function doesn't exist\n");
 				Sleep(1000);

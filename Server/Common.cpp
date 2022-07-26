@@ -46,3 +46,17 @@ void to_json_file(json j, string path) {
 	o << std::setw(4) << j << std::endl;
 }
 
+
+string trim(const string &s){
+	auto start = s.begin();
+	while (start != s.end() && isspace(*start)) {
+		start++;
+	}
+
+	auto end = s.end();
+	do {
+		end--;
+	} while (distance(start, end) > 0 && isspace(*end));
+
+	return string(start, end + 1);
+}

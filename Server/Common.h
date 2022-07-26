@@ -14,3 +14,5 @@ string random_string(int len);
 json from_json_file(string path);
 
 void to_json_file(json j, string path);
+
+string trim(const string &s);

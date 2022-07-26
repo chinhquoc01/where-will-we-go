@@ -25,4 +25,4 @@ json from_json_file(string path);
 
 void to_json_file(json j, string path);
 
-//json to_json_array_from_vector(vector<BaseClass> v);
+string trim(const string &s);

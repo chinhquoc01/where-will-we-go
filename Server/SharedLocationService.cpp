@@ -5,7 +5,6 @@
 
 /*
 Get all shared location from file
-@params path: path to file
 @return vector<SharedLocation>
 */
 vector<SharedLocation> get_all_shared_location() {

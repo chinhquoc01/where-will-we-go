@@ -1,5 +1,9 @@
 ﻿#include "FavouriteLocation.h"
 
+/*
+* Method get json object from FavouriteLocation object
+* @return Json object
+*/
 json FavouriteLocation::to_json_obj() {
 	auto jsonObj = json::object();
 	jsonObj["username"] = username;
@@ -8,6 +12,11 @@ json FavouriteLocation::to_json_obj() {
 	return jsonObj;
 }
 
+/*
+* Get json array from list of location
+* @param v Vector contain list of favourite location
+* @return json array
+*/
 json to_json_array_favourite_location(vector<FavouriteLocation> v) {
 	auto j = json::array();
 	for (auto l : v)
@@ -18,6 +27,11 @@ json to_json_array_favourite_location(vector<FavouriteLocation> v) {
 	return j;
 }
 
+/*
+* Get all favourite locations from json file
+* @param path Path to json file
+* @return vector list of favourite location
+*/
 vector<FavouriteLocation> get_all_favourite_locations_from_json(string path) {
 	json j = from_json_file(path);
 	vector<FavouriteLocation> res;
@@ -31,7 +45,10 @@ vector<FavouriteLocation> get_all_favourite_locations_from_json(string path) {
 }
 
 /*
-Lấy danh sách id địa điểm yêu thích từ file theo username
+* Get favourite location id by username
+* @param path Path to json file
+* @username Usernmae
+* @return vector favourite location id
 */
 vector<string> get_favourite_location_id(string path, string username) {
 	json fav = from_json_file(path);
@@ -56,6 +73,11 @@ vector<string> get_favourite_location_id(string path, string username) {
 	return res;
 }
 
+/*
+* Get favourite object from json object
+* @param jsonObj json object
+* @return favourite location object
+*/
 FavouriteLocation get_favourite_from_json_object(json jsonObj) {
 	auto favIdList = json::array();
 	favIdList = jsonObj["favLocationIdList"];

@@ -5,7 +5,9 @@
 #include <time.h>
 
 /*
-Sinh radom string
+* Generate random string
+* @param len Length of return string
+* @return Random string
 */
 string random_string(int len)
 {
@@ -23,7 +25,9 @@ string random_string(int len)
 }
 
 /*
-Trả về json object từ file json
+* Get json object from json file
+* @param path Path to json file
+* @return Json object
 */
 json from_json_file(string path) {
 	ifstream i(path);
@@ -33,7 +37,9 @@ json from_json_file(string path) {
 }
 
 /*
-Lưu json object về file json
+* Save json object as json file
+* @param j Json object
+* @param path Path to json file output
 */
 void to_json_file(json j, string path) {
 	std::ofstream o(path);

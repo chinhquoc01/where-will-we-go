@@ -12,11 +12,11 @@
     <Filter Include="Header Files\Service">
       <UniqueIdentifier>{a09f32aa-25da-482e-a693-e8397460d0e8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files">
+    <Filter Include="Resource Files\Source Files">
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source Files\Service">
+    <Filter Include="Resource Files\Source Files\Service">
       <UniqueIdentifier>{d8e83e2c-2fe9-41f2-842e-e51d06ddacc7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -63,6 +63,39 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
+<<<<<<< HEAD
+      <Filter>Resource Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Resource Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>Resource Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Account.cpp">
+      <Filter>Resource Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Location.cpp">
+      <Filter>Resource Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LocationService.cpp">
+      <Filter>Resource Files\Source Files\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedLocation.cpp">
+      <Filter>Resource Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedLocationService.cpp">
+      <Filter>Resource Files\Source Files\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="FavouriteLocation.cpp">
+      <Filter>Resource Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FavouriteLocationService.cpp">
+      <Filter>Resource Files\Source Files\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="AccountService.cpp">
+      <Filter>Resource Files\Source Files\Service</Filter>
+=======
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Server.cpp">
@@ -94,6 +127,7 @@
     </ClCompile>
     <ClCompile Include="AccountService.cpp">
       <Filter>Source Files\Service</Filter>
+>>>>>>> 22c24af38a4da13092bd454336073b0a466e7d7f
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

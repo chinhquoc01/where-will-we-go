@@ -20,7 +20,6 @@
 
 #pragma comment (lib,"ws2_32.lib")
 
-#define SERVER_PORT 5500
 #define SERVER_ADDR "127.0.0.1"
 #define BUFF_SIZE 2048
 
@@ -34,6 +33,7 @@ const ResponseCode responseCode;
 const Message sendMessage;
 
 CRITICAL_SECTION cs;
+int SERVER_PORT;
 
 typedef struct {
 	string username = "";
@@ -130,6 +130,21 @@ unsigned __stdcall userThread(void *param) {
 
 int main(int argc, char* argv[])
 {
+	// Get server port from command line parameter
+	if (argc < 2) {
+		cout << "[-] Not found server address.";
+		return 0;
+	}
+	try
+	{
+		SERVER_PORT = stoi(argv[1]);
+	}
+	catch (const exception&)
+	{
+		cout << "[-] Invalid server address";
+		return 0;
+	}
+
 	//Initiate WinSock
 	WSADATA wsaData;
 	WORD wVersion = MAKEWORD(2, 2);
@@ -160,7 +175,6 @@ int main(int argc, char* argv[])
 	}
 
 	printf("Server started!\n");
-	remove_from_favourite("quocpc1", "guiy7i");
 
 	InitializeCriticalSection(&cs);
 	//Communicate with client

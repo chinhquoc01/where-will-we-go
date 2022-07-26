@@ -89,11 +89,12 @@ int main(int argc, char *argv[])
 			continue;
 		}
 		else {
-			//gui username, password
+			//send username, password
 			send(client, buff, strlen(buff), 0);
 
-			//nhan thong diep
+			//recv
 			ret = recv(client, buff, BUFF_SIZE, 0);
+			//check if someone shared location to your account
 			bool haveNoti = false;
 			if (ret == 4) {
 				haveNoti = true;
@@ -101,10 +102,9 @@ int main(int argc, char *argv[])
 			}
 			buff[3] = 0;
 
-			//buff[ret] = 0;
-
 			getResponseCode(buff);
 			Sleep(1000);
+			//Login successfull
 			if (strcmp(buff, responseCode.successLogin) == 0) {
 				clientProcess(client, buff, select_function, haveNoti);
 			}

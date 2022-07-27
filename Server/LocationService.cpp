@@ -16,18 +16,27 @@ vector<Location> get_all_location() {
 * @return Vector contains list of location by type
 */
 vector<Location> get_locations_by_type(string type) {
-	auto locations = get_all_locations_from_json(Location::get_file_path());
-	if (type == "*") {
-		return locations;
-	}
-	int typeInt = stoi(type);
-	vector<Location> res;
-	for (auto location : locations) {
-		if (location.type == typeInt) {
-			res.push_back(location);
+	try
+	{
+
+		auto locations = get_all_locations_from_json(Location::get_file_path());
+		if (type == "*") {
+			return locations;
 		}
+		int typeInt = stoi(type);
+		vector<Location> res;
+		for (auto location : locations) {
+			if (location.type == typeInt) {
+				res.push_back(location);
+			}
+		}
+		return res;
 	}
-	return res;
+	catch (const std::exception&)
+	{
+		vector<Location> ret;
+		return ret;
+	}
 }
 
 /*

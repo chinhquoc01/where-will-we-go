@@ -136,7 +136,7 @@ bool accept_shared_location(string username, string locationId) {
 		add_to_favourite(username, locationId, sender);
 	}
 
-	return true;
+	return accept;
 }
 
 

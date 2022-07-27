@@ -20,7 +20,7 @@
 
 #pragma comment (lib,"ws2_32.lib")
 
-#define SERVER_ADDR "192.168.1.190"
+#define SERVER_ADDR "192.168.65.51"
 #define BUFF_SIZE 2048
 
 int clientPort;
@@ -108,7 +108,7 @@ unsigned __stdcall userThread(void *param) {
 				ret = send(connectedSocket, length.c_str(), strlen(length.c_str()), 0);
 				if (ret == SOCKET_ERROR) {
 					printf("Error %d: Cannot send data to client[%s:%d]\n", WSAGetLastError(), clientIP, clientPort);
-					break;
+					continue;
 				}
 
 				for (int i = 0; i < currentClient.listData.size(); i++) {
@@ -119,7 +119,7 @@ unsigned __stdcall userThread(void *param) {
 
 					if (ret == SOCKET_ERROR) {
 						printf("Error %d: Cannot send data to client[%s:%d]\n", WSAGetLastError(), clientIP, clientPort);
-						break;
+						continue;
 					}
 				}
 				currentClient.listData.clear();
@@ -580,21 +580,29 @@ string logout_account(client* client) {
 * @return response code with each case
 */
 string add_location(string name, string type, string address, string description, client* client) {
-	if (name == "" || type == "" || address == "" || description == "") {
+	try
+	{
+		if (name == "" || type == "" || address == "" || description == "") {
+			return responseCode.errorInvalidInput;
+		}
+		if (stoi(type) < 1 || stoi(type) > 5) {
+			return responseCode.errorNotExistType;
+		}
+		get_location_data();
+
+		Location l(name, stoi(type), description, address);
+		locationList.push_back(l);
+
+		json locationJsonObj = to_json_array_location(locationList);
+		to_json_file(locationJsonObj, Location::get_file_path());
+
+		return responseCode.successAdd;
+
+	}
+	catch (const std::exception&)
+	{
 		return responseCode.errorInvalidInput;
 	}
-	if (stoi(type) < 1 || stoi(type) > 5) {
-		return responseCode.errorInvalidInput;
-	}
-	get_location_data();
-
-	Location l(name, stoi(type), description, address);
-	locationList.push_back(l);
-
-	json locationJsonObj = to_json_array_location(locationList);
-	to_json_file(locationJsonObj, Location::get_file_path());
-
-	return responseCode.successAdd;
 }
 
 /*

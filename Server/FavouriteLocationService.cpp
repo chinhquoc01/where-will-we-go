@@ -7,20 +7,29 @@
 * @return Vector contains list of locations
 */
 vector<Location> get_favourite_list(string username, string type) {
-	auto favLocationIds = get_favourite_location_id(FavouriteLocation::get_file_path(), username);
-	auto locations = get_all_locations_from_json(Location::get_file_path());
-	auto favLocations = get_location_from_id_list(locations, favLocationIds);
-	if (type == "*")
-		return favLocations;
-	else {
-		int typeInt = stoi(type);
-		vector<Location> res;
-		for (auto fav : favLocations) {
-			if (fav.type == typeInt) {
-				res.push_back(fav);
+	try
+	{
+		auto favLocationIds = get_favourite_location_id(FavouriteLocation::get_file_path(), username);
+		auto locations = get_all_locations_from_json(Location::get_file_path());
+		auto favLocations = get_location_from_id_list(locations, favLocationIds);
+		if (type == "*")
+			return favLocations;
+		else {
+			int typeInt = stoi(type);
+			vector<Location> res;
+			for (auto fav : favLocations) {
+				if (fav.type == typeInt) {
+					res.push_back(fav);
+				}
 			}
+			return res;
 		}
-		return res;
+
+	}
+	catch (const std::exception&)
+	{
+		vector<Location> ret;
+		return ret;
 	}
 }
 

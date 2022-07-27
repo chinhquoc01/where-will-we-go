@@ -1,54 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Header Files\Service">
-      <UniqueIdentifier>{a09f32aa-25da-482e-a693-e8397460d0e8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Resource Files\Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Resource Files\Source Files\Service">
-      <UniqueIdentifier>{d8e83e2c-2fe9-41f2-842e-e51d06ddacc7}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Account.cpp">
+      <Filter>Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp">
+      <Filter>Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="Location.cpp">
+      <Filter>Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="FavouriteLocation.cpp">
+      <Filter>Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="AccountService.cpp">
+      <Filter>Source File\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="FavouriteLocationService.cpp">
+      <Filter>Source File\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="LocationService.cpp">
+      <Filter>Source File\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedLocation.cpp">
+      <Filter>Source File</Filter>
+    </ClCompile>
+    <ClCompile Include="SharedLocationService.cpp">
+      <Filter>Source File\Service</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Source File</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
     <ClInclude Include="Account.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Location.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LocationService.h">
-      <Filter>Header Files\Service</Filter>
-    </ClInclude>
-    <ClInclude Include="SharedLocation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SharedLocationService.h">
+    <ClInclude Include="AccountService.h">
       <Filter>Header Files\Service</Filter>
     </ClInclude>
     <ClInclude Include="FavouriteLocation.h">
@@ -57,80 +51,40 @@
     <ClInclude Include="FavouriteLocationService.h">
       <Filter>Header Files\Service</Filter>
     </ClInclude>
-    <ClInclude Include="AccountService.h">
+    <ClInclude Include="LocationService.h">
       <Filter>Header Files\Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Location.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedLocation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SharedLocationService.h">
+      <Filter>Header Files\Service</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-<<<<<<< HEAD
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Server.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Account.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Location.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LocationService.cpp">
-      <Filter>Resource Files\Source Files\Service</Filter>
-    </ClCompile>
-    <ClCompile Include="SharedLocation.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SharedLocationService.cpp">
-      <Filter>Resource Files\Source Files\Service</Filter>
-    </ClCompile>
-    <ClCompile Include="FavouriteLocation.cpp">
-      <Filter>Resource Files\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FavouriteLocationService.cpp">
-      <Filter>Resource Files\Source Files\Service</Filter>
-    </ClCompile>
-    <ClCompile Include="AccountService.cpp">
-      <Filter>Resource Files\Source Files\Service</Filter>
-=======
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Server.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Common.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Account.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Location.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LocationService.cpp">
-      <Filter>Source Files\Service</Filter>
-    </ClCompile>
-    <ClCompile Include="SharedLocation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SharedLocationService.cpp">
-      <Filter>Source Files\Service</Filter>
-    </ClCompile>
-    <ClCompile Include="FavouriteLocation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FavouriteLocationService.cpp">
-      <Filter>Source Files\Service</Filter>
-    </ClCompile>
-    <ClCompile Include="AccountService.cpp">
-      <Filter>Source Files\Service</Filter>
->>>>>>> 22c24af38a4da13092bd454336073b0a466e7d7f
-    </ClCompile>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{33ff3bb3-f111-46fb-988b-d857c83b159e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Service">
+      <UniqueIdentifier>{35114c30-f369-4653-bac0-a27f4be3356f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File">
+      <UniqueIdentifier>{c3685ed1-009b-47d0-a50f-c2bc64483c8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source File\Service">
+      <UniqueIdentifier>{1165a960-2341-4328-a2f0-31f7c9a3a385}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

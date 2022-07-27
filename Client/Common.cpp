@@ -50,7 +50,7 @@ void getResponseCode(char* buff) {
 	else if (strcmp(buff, responseCode.successAdd) == 0) 
 		printf("Add new location successfull\n");
 	else if (strcmp(buff, responseCode.errorInvalidInput) == 0) {
-		printf("You haven't input enough infomation!\n");
+		printf("Invalid input!\n");
 	}
 	else if (strcmp(buff, responseCode.errorNotExistType) == 0) {
 		printf("IDType doesn't exist!\n");

@@ -20,7 +20,7 @@
 
 #pragma comment (lib,"ws2_32.lib")
 
-#define SERVER_ADDR "192.168.1.190"
+#define SERVER_ADDR "127.0.0.1"
 #define BUFF_SIZE 2048
 
 int clientPort;
